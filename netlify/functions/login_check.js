@@ -41,7 +41,16 @@ exports.handler = async (event) => {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Доступ не оплачен' }) };
     }
 
-    return { statusCode: 200, headers, body: JSON.stringify({ success: true, userId: user.id, email: user.email }) };
+    return { 
+      statusCode: 200, 
+      headers, 
+      body: JSON.stringify({ 
+        success: true, 
+        userId: user.id, 
+        email: user.email,
+        isPaid: user.is_paid
+      }) 
+    };
 
   } catch (err) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };

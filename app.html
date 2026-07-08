@@ -495,7 +495,7 @@
   </style>
   
   
-  <script src="/supabase.min.js"></script>
+ 
 </head>
 <body class="locked">
   <!-- ВРЕМЕННО ДЛЯ ВИДЕО - Начальный баннер -->
@@ -564,9 +564,7 @@
   </div>
   
   <script>
-    const SUPABASE_URL = 'https://ielcnbcvslloqzmrzzqc.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_oj4Mypwi8KKdReaOpu8AwQ_qtRSotnJ';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
     
     function getDeviceFingerprint() {
       if (typeof ClientJS === 'undefined') {
@@ -636,88 +634,55 @@ async function handleLogin() {
   }
   
   try {
-  // СНАЧАЛА генерируем fingerprint
-  const deviceFingerprint = getDeviceFingerprint();
-  
-  // Вызываем нашу функцию login_check
-  const response = await fetch(`https://ielcnbcvslloqzmrzzqc.supabase.co/functions/v1/login_check`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY
-    },
-    body: JSON.stringify({ email, password, deviceFingerprint })
-  });
+    const deviceFingerprint = getDeviceFingerprint();
+    const deviceName = getDeviceName();
+
+    // Проверяем логин через Netlify
+    const response = await fetch(`${NETLIFY_URL}/.netlify/functions/login_check`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
 
     const result = await response.json();
 
     if (!response.ok) {
-      // Если пароль неверный или в базе стоит is_paid: false
       alert(result.error || 'Ошибка входа');
       return;
     }
 
-    // Если функция подтвердила вход и оплату, создаем сессию
-    const { error: sessionError } = await supabaseClient.auth.setSession({
-      access_token: result.session.access_token,
-      refresh_token: result.session.refresh_token
+    const userId = result.userId;
+
+    // Проверяем устройство
+    const deviceResponse = await fetch(`${NETLIFY_URL}/.netlify/functions/device_check`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, deviceFingerprint, deviceName, email })
     });
 
-    if (sessionError) throw sessionError;
+    const deviceResult = await deviceResponse.json();
 
-    // Дальше идет твоя родная логика проверки устройств
-    const userId = result.session.user.id;
-    // const deviceFingerprint = getDeviceFingerprint();
-
-    
-    const deviceName = getDeviceName();
-    
-    const { data: devices, error: devicesError } = await supabaseClient
-      .from('user_devices')
-      .select('*')
-      .eq('user_id', userId);
-    
-    if (devicesError) {
-      alert('Ошибка проверки устройств. Попробуйте позже.');
+    if (!deviceResponse.ok) {
+      alert(deviceResult.error || 'Ошибка проверки устройства');
       return;
     }
-    
-    const existingDevice = devices.find(d => d.device_fingerprint === deviceFingerprint);
-    
-    if (existingDevice) {
-      await supabaseClient
-        .from('user_devices')
-        .update({ last_login: new Date().toISOString() })
-        .eq('id', existingDevice.id);
-    } else {
-      if (devices.length >= 3) {
-        alert('⚠️ Лимит устройств достигнут!');
-        return;
-      }
-      await supabaseClient.from('user_devices').insert({
-          user_id: userId,
-          device_fingerprint: deviceFingerprint,
-          device_name: deviceName,
-          email: email  // ← ДОБАВИТЬ ЭТО
-      });
-    }
-    
+
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userId', userId);
     localStorage.setItem('userEmail', email);
     localStorage.setItem('deviceFingerprint', deviceFingerprint);
-    
+
     const overlay = document.getElementById('loginOverlay');
     overlay.classList.add('hidden');
     document.body.classList.remove('locked');
-    
+
     document.getElementById('settingsBtn').classList.add('show');
     document.getElementById('logoutBtn').classList.add('show');
-    
+
     if (email === 'tzsharipov@gmail.com') {
       document.getElementById('adminBtn').style.display = 'block';
     }
-    
+
   } catch (err) {
     console.error(err);
     alert('Произошла ошибка при входе. Попробуйте ещё раз.');
@@ -796,36 +761,32 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // ЖЕСТКАЯ ПРОВЕРКА: Если оплаты нет — выкидываем немедленно
     async function checkAccessStrict() {
-      try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (!session) return false;
+  try {
+    const userId = localStorage.getItem('userId');
+    const email = localStorage.getItem('userEmail');
+    
+    if (!userId || !email) return false;
 
-        const { data: profile, error } = await supabaseClient
-          .from('profiles')
-          .select('is_paid')
-          .eq('id', session.user.id)
-          .single();
+    const response = await fetch(`${NETLIFY_URL}/.netlify/functions/login_check`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: localStorage.getItem('passwordHash') || '' })
+    });
 
-        if (error || !profile || profile.is_paid !== true) {
-          console.log("Доступ закрыт админом. Выход...");
-          localStorage.removeItem('isLoggedIn');
-          localStorage.removeItem('userId');
-          localStorage.removeItem('userEmail');
-          await supabaseClient.auth.signOut();
-          
-          // Если мы уже внутри — перезагружаем страницу, чтобы появилось окно входа
-          if (!document.getElementById('loginOverlay').classList.contains('hidden')) {
-             return false;
-          }
-          window.location.reload();
-          return false;
-        }
-        return true;
-      } catch (e) {
-        console.error("Ошибка проверки доступа:", e);
-        return true; // В случае ошибки сети не выкидываем
-      }
+    if (!response.ok) {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userEmail');
+      window.location.reload();
+      return false;
     }
+
+    return true;
+  } catch (e) {
+    console.error("Ошибка проверки доступа:", e);
+    return true;
+  }
+}
   </script>
 
   <script>
