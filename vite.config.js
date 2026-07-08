@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import { copyFileSync } from 'fs'
 export default defineConfig({
-  base: '/',
+  base: '/math-trainer-neon/',
   build: {
     rollupOptions: {
       input: {
