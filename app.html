@@ -763,14 +763,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     async function checkAccessStrict() {
   try {
     const userId = localStorage.getItem('userId');
-    const email = localStorage.getItem('userEmail');
     
-    if (!userId || !email) return false;
+    if (!userId) return false;
 
-    const response = await fetch(`${NETLIFY_URL}/.netlify/functions/login_check`, {
+    const response = await fetch(`${NETLIFY_URL}/.netlify/functions/check_access`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: localStorage.getItem('passwordHash') || '' })
+      body: JSON.stringify({ userId })
     });
 
     if (!response.ok) {
