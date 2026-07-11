@@ -1,5 +1,7 @@
 const { Pool } = require('pg');
 const https = require('https');
+const crypto = require('crypto');
+const { hashPassword } = require('./_password');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -54,11 +56,12 @@ exports.handler = async (event) => {
 
     const password = generatePassword();
     const userId = crypto.randomUUID();
+    const passwordHash = hashPassword(password);
 
     // Создаём профиль
     await pool.query(
-      'INSERT INTO profiles (id, email, is_paid, created_at) VALUES ($1, $2, $3, $4)',
-      [userId, application.email, true, new Date().toISOString()]
+      'INSERT INTO profiles (id, email, is_paid, password_hash, created_at) VALUES ($1, $2, $3, $4, $5)',
+      [userId, application.email, true, passwordHash, new Date().toISOString()]
     );
 
     // Обновляем заявку

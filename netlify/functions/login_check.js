@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const crypto = require('crypto');
+const { verifyPassword, hashPassword, needsRehash } = require('./_password');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -24,11 +24,9 @@ exports.handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Email и пароль обязательны' }) };
     }
 
-    const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
-
     const { rows } = await pool.query(
-      'SELECT * FROM profiles WHERE email=$1 AND password_hash=$2',
-      [email.toLowerCase(), passwordHash]
+      'SELECT * FROM profiles WHERE email=$1',
+      [email.toLowerCase()]
     );
 
     if (!rows.length) {
@@ -36,6 +34,16 @@ exports.handler = async (event) => {
     }
 
     const user = rows[0];
+
+    if (!verifyPassword(password, user.password_hash)) {
+      return { statusCode: 401, headers, body: JSON.stringify({ error: 'Неверный email или пароль' }) };
+    }
+
+    // Старый аккаунт с небезопасным хэшем — тихо переводим на новый формат
+    if (needsRehash(user.password_hash)) {
+      const newHash = hashPassword(password);
+      await pool.query('UPDATE profiles SET password_hash=$1 WHERE id=$2', [newHash, user.id]);
+    }
 
     if (!user.is_paid) {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Доступ не оплачен' }) };

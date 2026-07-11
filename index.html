@@ -949,8 +949,7 @@
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Открытие формы заявки
-    const SUPABASE_URL = 'https://ielcnbcvslloqzmrzzqc.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_oj4Mypwi8KKdReaOpu8AwQ_qtRSotnJ';
+    const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
     
     window.openOrderModal = function() {
       document.getElementById('orderModal').classList.add('active');
@@ -989,11 +988,10 @@
       const telegram = document.getElementById('telegramInput').value.trim();
       
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/submit_application`, {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/submit_application`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_KEY
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             email,

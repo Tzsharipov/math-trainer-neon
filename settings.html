@@ -287,7 +287,6 @@
     }
   </style>
   
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="settings-container">
@@ -347,10 +346,8 @@
   </div>
   
   <script>
-    const SUPABASE_URL = 'https://ielcnbcvslloqzmrzzqc.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_oj4Mypwi8KKdReaOpu8AwQ_qtRSotnJ';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    
+    const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
+
     document.getElementById('currentLogin').textContent = localStorage.getItem('userEmail') || 'Неизвестно';
     
     const currentChildName = localStorage.getItem('childName');
@@ -364,14 +361,14 @@
       }
       
       try {
-        const { error } = await supabaseClient
-          .from('user_devices')
-          .delete()
-          .eq('id', deviceId);
-        
-        if (error) {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/delete_device`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ deviceId })
+        });
+
+        if (!response.ok) {
           alert('Ошибка отвязки устройства!');
-          console.error(error);
           return;
         }
         
@@ -389,17 +386,17 @@
       const currentFingerprint = localStorage.getItem('deviceFingerprint');
       
       try {
-        const { data: devices, error } = await supabaseClient
-          .from('user_devices')
-          .select('*')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false });
-        
-        if (error) {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/list_devices?userId=${encodeURIComponent(userId)}`, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
           document.getElementById('devicesList').innerHTML = '<p class="devices-error">Ошибка загрузки устройств</p>';
           return;
         }
-        
+
+        const devices = await response.json();
+
         if (devices.length === 0) {
           document.getElementById('devicesList').innerHTML = '<p class="devices-empty">Нет привязанных устройств</p>';
           return;
@@ -486,25 +483,21 @@
       }
       
       try {
-        const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
-          email: userEmail,
-          password: currentPassword
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/update_user_password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: userEmail,
+            currentPassword,
+            newPassword: newPassword || undefined
+          })
         });
-        
-        if (authError || !authData.user) {
-          showMessage('Неверный текущий пароль!', 'error');
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          showMessage(result.error || 'Неверный текущий пароль!', 'error');
           return;
-        }
-        
-        if (newPassword) {
-          const { error: updateError } = await supabaseClient.auth.updateUser({
-            password: newPassword
-          });
-          
-          if (updateError) {
-            showMessage('Ошибка смены пароля!', 'error');
-            return;
-          }
         }
         
         if (childName) {

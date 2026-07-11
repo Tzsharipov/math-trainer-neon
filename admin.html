@@ -563,7 +563,6 @@
     }
   </style>
   
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="admin-header">
@@ -666,12 +665,8 @@
   </div>
   
   <script>
-    const SUPABASE_URL = 'https://ielcnbcvslloqzmrzzqc.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllbGNuYmN2c2xsb3F6bXJ6enFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc5MDUxMjUsImV4cCI6MjA1MzQ4MTEyNX0.sb_publishable_oj4Mypwi8KKdReaOpu8AwQ_qtRSotnJ';
-    
-    const { createClient } = supabase;
-    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY, { realtime: { enabled: false } });
-    
+    const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
+
     let currentFilter = 'all';
     let allApplications = [];
     let currentUserEmail = '';
@@ -681,12 +676,11 @@
     async function loadApplications() {
       try {
         const url = currentFilter === 'all' 
-          ? `${SUPABASE_URL}/functions/v1/list_applications`
-          : `${SUPABASE_URL}/functions/v1/list_applications?status=${currentFilter}`;
+          ? `${NETLIFY_URL}/.netlify/functions/list_applications`
+          : `${NETLIFY_URL}/.netlify/functions/list_applications?status=${currentFilter}`;
           
         const response = await fetch(url, {
           headers: {
-            'apikey': SUPABASE_KEY,
             'Content-Type': 'application/json'
           }
         });
@@ -797,10 +791,9 @@
       if (!confirm('Подтвердить оплату этой заявки?')) return;
       
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/update_application_status`, {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/update_application_status`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_KEY,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -828,10 +821,9 @@
       if (!confirm(`Создать пользователя для ${email}?`)) return;
       
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/create_user`, {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/create_user`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_KEY,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -866,10 +858,9 @@
       if (!confirm('Удалить эту заявку? Это действие нельзя отменить.')) return;
       
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/delete_application`, {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/delete_application`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_KEY,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ applicationId })
@@ -902,10 +893,9 @@
       createBtn.textContent = 'Создание...';
       
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/create_user`, {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/create_user`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_KEY,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ email })
@@ -948,9 +938,8 @@
     
     async function loadUsers() {
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/list_users`, {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/list_users`, {
           headers: {
-            'apikey': SUPABASE_KEY,
             'Content-Type': 'application/json'
           }
         });
@@ -1006,10 +995,9 @@
       if (!confirm(`Вы уверены что хотите ${action} пользователя?`)) return;
       
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/update_user_status`, {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/update_user_status`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_KEY,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ userId, isPaid })
@@ -1033,10 +1021,9 @@
       if (!confirm(`Удалить пользователя ${email}? Это действие нельзя отменить.`)) return;
       
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/delete_user`, {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/delete_user`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_KEY,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ userId })
@@ -1060,14 +1047,14 @@
       currentUserEmail = email;
       
       try {
-        const { data, error } = await supabaseClient
-          .from('user_devices')
-          .select('*')
-          .eq('email', email)
-          .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/list_devices?email=${encodeURIComponent(email)}`, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Ошибка загрузки устройств');
+
+        const data = await response.json();
+
         const devicesList = document.getElementById('devicesList');
         
         if (data.length === 0) {
@@ -1110,13 +1097,14 @@
       if (!confirm('Отвязать это устройство?')) return;
       
       try {
-        const { error } = await supabaseClient
-          .from('user_devices')
-          .delete()
-          .eq('id', deviceId);
-        
-        if (error) throw error;
-        
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/delete_device`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ deviceId })
+        });
+
+        if (!response.ok) throw new Error('Ошибка отвязки устройства');
+
         showMessage('Устройство отвязано', 'success');
         showDevices(currentUserEmail);
         
