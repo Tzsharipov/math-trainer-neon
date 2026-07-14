@@ -584,9 +584,6 @@
         <button class="filter-btn" onclick="filterApplications('pending_payment', event)">
           🟡 Ожидают оплаты
         </button>
-        <button class="filter-btn" onclick="filterApplications('paid', event)">
-          🟢 Оплачены
-        </button>
         <button class="filter-btn" onclick="filterApplications('completed', event)">
           ✅ Завершённые
         </button>
@@ -733,7 +730,6 @@
         }[app.status] || { text: app.status, class: 'pending' };
         
         const showConfirmBtn = app.status === 'pending_payment';
-        const showCreateBtn = app.status === 'paid';
         
         return `
           <div class="application-card">
@@ -771,11 +767,6 @@
               ${showConfirmBtn ? `
                 <button class="app-btn confirm" onclick="confirmPayment('${app.id}')">
                   ✓ Подтвердить оплату
-                </button>
-              ` : ''}
-              ${showCreateBtn ? `
-                <button class="app-btn create" onclick="createUserFromApplication('${app.id}', '${app.email}')">
-                  ➕ Создать пользователя
                 </button>
               ` : ''}
               <button class="app-btn delete" onclick="deleteApplication('${app.id}')">
@@ -817,42 +808,6 @@
       }
     }
     
-    async function createUserFromApplication(applicationId, email) {
-      if (!confirm(`Создать пользователя для ${email}?`)) return;
-      
-      try {
-        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/create_user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: email,
-            applicationId: applicationId
-          })
-        });
-        
-        if (!response.ok) throw new Error('Ошибка создания пользователя');
-        
-        const data = await response.json();
-        
-        // Сначала показываем alert с паролем
-        alert(`Пользователь создан!\n\nEmail: ${data.email}\nПароль: ${data.password}\n\nТеперь активируйте пользователя в секции "Пользователи" для отправки Email с доступом.`);
-        
-        // Потом сообщение
-        showMessage('Пользователь создан! Заявка завершена.', 'success');
-        
-        // Перезагружаем с задержкой
-        setTimeout(() => {
-          loadApplications();
-          loadUsers();
-        }, 1000);
-        
-      } catch (error) {
-        console.error('Ошибка:', error);
-        showMessage('Ошибка создания пользователя', 'error');
-      }
-    }
     
     async function deleteApplication(applicationId) {
       if (!confirm('Удалить эту заявку? Это действие нельзя отменить.')) return;

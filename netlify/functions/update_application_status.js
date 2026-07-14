@@ -50,7 +50,7 @@ exports.handler = async (event) => {
 
     if (application.user_id) {
       await pool.query('UPDATE applications SET status=$1, paid_at=$2 WHERE id=$3', 
-        ['paid', new Date().toISOString(), applicationId]);
+        ['completed', new Date().toISOString(), applicationId]);
       return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
     }
 
@@ -67,7 +67,7 @@ exports.handler = async (event) => {
     // Обновляем заявку
     await pool.query(
       'UPDATE applications SET status=$1, paid_at=$2, completed_at=$3, user_id=$4 WHERE id=$5',
-      ['paid', new Date().toISOString(), new Date().toISOString(), userId, applicationId]
+      ['completed', new Date().toISOString(), new Date().toISOString(), userId, applicationId]
     );
 
     // Отправляем email через Resend
