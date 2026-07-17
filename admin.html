@@ -1015,7 +1015,11 @@
         
         const data = await response.json();
         
-        alert(`Пароль сброшен!\n\nEmail: ${data.email}\nНовый пароль: ${data.password}\n\nСообщите этот пароль пользователю вручную.`);
+        document.getElementById('resultTitle').textContent = '🔑 Пароль сброшен!';
+        document.getElementById('resultEmail').textContent = `Email: ${data.email}`;
+        document.getElementById('resultPassword').textContent = data.password;
+        document.getElementById('result').classList.add('show');
+        document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
         
         showMessage('Пароль сброшен', 'success');
         
