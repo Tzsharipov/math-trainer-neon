@@ -937,6 +937,7 @@
                   : `<button class="btn-sm activate" onclick="toggleUserStatus('${user.id}', true)">Активировать</button>`
                 }
                 <button class="btn-sm devices" onclick="showDevices('${user.email}')">Устройства</button>
+                <button class="btn-sm devices" onclick="resetUserPassword('${user.id}', '${user.email}')">🔑 Сбросить пароль</button>
                 <button class="btn-sm delete" onclick="deleteUser('${user.id}', '${user.email}')">Удалить</button>
               </div>
             </td>
@@ -995,6 +996,32 @@
       } catch (error) {
         console.error('Ошибка:', error);
         showMessage('Ошибка удаления пользователя', 'error');
+      }
+    }
+    
+    async function resetUserPassword(userId, email) {
+      if (!confirm(`Сбросить пароль для ${email}?\n\nТекущий пароль перестанет работать, будет сгенерирован новый.`)) return;
+      
+      try {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/reset_user_password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId })
+        });
+        
+        if (!response.ok) throw new Error('Ошибка сброса пароля');
+        
+        const data = await response.json();
+        
+        alert(`Пароль сброшен!\n\nEmail: ${data.email}\nНовый пароль: ${data.password}\n\nСообщите этот пароль пользователю вручную.`);
+        
+        showMessage('Пароль сброшен', 'success');
+        
+      } catch (error) {
+        console.error('Ошибка:', error);
+        showMessage('Ошибка сброса пароля', 'error');
       }
     }
     
