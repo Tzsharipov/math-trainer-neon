@@ -92,7 +92,9 @@ exports.handler = async (event) => {
 
     const result = await yookassaRequest('/v3/payments', 'POST', paymentBody);
 
-    if (result.statusCode !== 200 && result.statusCode !== 201) {
+console.log('YOOKASSA:', result.statusCode, JSON.stringify(result.body));
+    
+if (result.statusCode !== 200 && result.statusCode !== 201) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Ошибка создания платежа', details: result.body }) };
     }
 
