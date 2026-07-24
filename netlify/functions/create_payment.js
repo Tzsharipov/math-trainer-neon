@@ -98,6 +98,8 @@ if (result.statusCode !== 200 && result.statusCode !== 201) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Ошибка создания платежа', details: result.body }) };
     }
 
+    console.log('CONFIRMATION URL:', result.body.confirmation ? result.body.confirmation.confirmation_url : 'NO CONFIRMATION OBJECT');
+
     await pool.query('UPDATE applications SET payment_id=$1 WHERE id=$2', [result.body.id, applicationId]);
 
     return {
@@ -107,6 +109,7 @@ if (result.statusCode !== 200 && result.statusCode !== 201) {
     };
 
   } catch (err) {
+    console.error('CREATE_PAYMENT CRASH:', err.message);
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
