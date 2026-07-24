@@ -5,3 +5,6 @@
 
 [dev]
   command = "npm run dev"
+
+[functions."check_subscriptions"]
+  schedule = "@daily"
