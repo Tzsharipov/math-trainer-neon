@@ -982,7 +982,7 @@ async function updatePriceDisplay() {
 }
 updatePriceDisplay();
 
-  updatePriceDisplay();
+ 
     window.openOrderModal = function() {
       document.getElementById('orderModal').classList.add('active');
       document.getElementById('registrationForm').style.display = 'block';
@@ -1043,10 +1043,32 @@ updatePriceDisplay();
         }
         
         // Показываем экран успеха
-        document.getElementById('registrationForm').style.display = 'none';
-        document.getElementById('successScreen').classList.add('active');
-        document.getElementById('appNumberDisplay').textContent = result.applicationNumber;
-        document.getElementById('appNumberComment').textContent = 'Заявка ' + result.applicationNumber;
+        submitBtn.textContent = 'Переходим к оплате...';
+
+        try {
+          const paymentResponse = await fetch(`${NETLIFY_URL}/.netlify/functions/create_payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ applicationId: result.applicationId })
+          });
+
+          const paymentResult = await paymentResponse.json();
+
+          if (!paymentResponse.ok || !paymentResult.confirmationUrl) {
+            alert('❌ Не удалось создать платёж. Попробуйте ещё раз или напишите нам в Telegram: @SharipovT');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Отправить заявку';
+            return;
+          }
+
+          window.location.href = paymentResult.confirmationUrl;
+
+        } catch (err) {
+          console.error('Ошибка создания платежа:', err);
+          alert('❌ Ошибка при переходе к оплате. Попробуйте ещё раз.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Отправить заявку';
+        }
         
       } catch (err) {
         console.error('Error:', err);

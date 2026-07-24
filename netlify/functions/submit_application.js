@@ -39,7 +39,7 @@ exports.handler = async (event) => {
       [applicationNumber, email.toLowerCase().trim(), childName.trim(), payerName.trim(), telegram ? telegram.trim() : null]
     );
 
-    return { statusCode: 200, headers, body: JSON.stringify({ success: true, applicationNumber, message: 'Заявка успешно создана' }) };
+    rreturn { statusCode: 200, headers, body: JSON.stringify({ success: true, applicationId: rows[0].id, applicationNumber, message: 'Заявка успешно создана' }) };
 
   } catch (err) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
