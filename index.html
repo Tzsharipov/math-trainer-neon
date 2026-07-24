@@ -709,6 +709,8 @@
       font-weight: 600;
       line-height: 1.5;
     }
+
+    .price-compare.no-pin p::before { content: none; }
   </style>
 </head>
 <body>
@@ -840,36 +842,39 @@
     <div class="container">
       
       <div class="promo-block" style="margin-bottom: 40px;">
-        <div class="promo-banner">
-          ВАШ РЕБЁНОК ОСВОИТ ЭТИ ОПЕРАЦИИ ЗА 2 НЕДЕЛИ<br>БЕЗ СЛЁЗ И СПОРОВ С РОДИТЕЛЯМИ
-        </div>
-        
-        <button class="promo-cta-btn" onclick="openOrderModal()">
-          Оформить доступ для обучения
-        </button>
-        
-        <div class="promo-price-note">
-          Стоимость полного доступа - 990 руб.<br>
-          Навсегда для всей семьи
-        </div>
-        
-        <div class="price-compare">
-          <p>Это дешевле чем:</p>
-          <p>1 занятие с репетитором (1500₽/час)</p>
-          <p>Комплект тетрадей и пособий (800₽)</p>
-          <p>Онлайн-курс на месяц (2500₽)</p>
-        </div>
-        
-        <div class="bonus">
-          <p>БОНУС: Персонализированные поздравления с именем ребёнка</p>
-        </div>
-        
-        <div class="payment-info">
-          <p>💳 Оплата картой или СБП</p>
-          <p>🔒 Безопасная передача данных</p>
-          <p>✓ Доступ открывается в течение 1-2 часов</p>
-        </div>
-      </div>
+  <div class="promo-banner">
+    ВАШ РЕБЁНОК ОСВОИТ ЭТИ ОПЕРАЦИИ ЗА 2 НЕДЕЛИ<br>
+    Без слёз, уговоров и споров с родителями
+  </div>
+
+  <div style="background: #fff7ed; border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-bottom: 25px; color: #92400e;">
+    <div style="font-size: 1.3em; font-weight: 900; margin-bottom: 5px;">🚀 СТАРТОВАЯ АКЦИЯ: Забери лучшую цену</div>
+    <div style="font-size: 0.95em; margin-bottom: 15px;">Чем раньше оформляете доступ, тем дешевле!</div>
+    <div style="text-align: left; display: inline-block; font-size: 1.05em; line-height: 1.8;">
+      🔥 Первым 100 покупателям эксклюзив — <strong>100 ₽ / год</strong><br>
+      ⚡️ Следующим 200 покупателям — <strong>200 ₽ / год</strong><br>
+      🔒 Далее — <strong>490 ₽ / год</strong>
+    </div>
+    <div style="font-size: 0.85em; opacity: 0.85; margin-top: 12px;">💡 Зафиксируем вашу цену на 12 месяцев с момента оплаты.</div>
+  </div>
+
+  <div class="price-compare no-pin">
+    <p>Это выгоднее, чем обычные альтернативы:</p>
+    <p>❌ 1 занятие с репетитором — от 800₽ (а их нужно хотя бы 8-10)</p>
+    <p>❌ Месяц на детской онлайн-платформе — от 1990₽</p>
+    <p>❌ Комплект печатных тетрадей-тренажёров — от 600₽</p>
+  </div>
+
+  <button class="promo-cta-btn" onclick="openOrderModal()" id="mainCtaBtn">
+    Оформить доступ за <span id="ctaPriceText">100 ₽</span> / год
+  </button>
+
+  <div class="payment-info">
+    <p>💳 Оплата картой или СБП</p>
+    <p>🔒 Безопасная передача данных</p>
+    <p>✓ Доступ открывается в течение 1-2 часов</p>
+  </div>
+</div>
       
     </div>
   </section>
@@ -928,13 +933,13 @@
       </button>
       
       <p class="cta-note">
-        P.S. Это НЕ подписка. Оплата один раз — пользуйтесь вечно.
-      </p>
+  P.S. Доступ действует 1 год с момента оплаты. Напомним заранее, если понадобится продлить.
+</p>
     </div>
   </section>
 
   <!-- Footer -->
-  <<footer>
+  <footer>
     <div class="container">
       <p>Математический тренажёр © 2025</p>
       <p style="opacity: 0.8; font-size: 14px; margin-top: 8px;">столбиком.рф | stolbik.online</p>
@@ -958,6 +963,26 @@
     // Открытие формы заявки
     const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
     
+    let currentPrice = 100;
+
+async function updatePriceDisplay() {
+  try {
+    const response = await fetch(`${NETLIFY_URL}/.netlify/functions/get_price_status`);
+    const data = await response.json();
+    currentPrice = data.price;
+
+    const ctaEl = document.getElementById('ctaPriceText');
+    if (ctaEl) ctaEl.textContent = currentPrice + ' ₽';
+
+    const paymentEl = document.getElementById('paymentAmountText');
+    if (paymentEl) paymentEl.textContent = currentPrice;
+  } catch (e) {
+    console.error('Не удалось получить актуальную цену', e);
+  }
+}
+updatePriceDisplay();
+
+  updatePriceDisplay();
     window.openOrderModal = function() {
       document.getElementById('orderModal').classList.add('active');
       document.getElementById('registrationForm').style.display = 'block';
@@ -1119,7 +1144,7 @@
         <div class="payment-info">
           <h3>Для активации доступа:</h3>
           
-          <p><strong>1️⃣ Переведите 990₽:</strong></p>
+          <p><strong>1️⃣ Переведите <span id="paymentAmountText">100</span>₽:</strong></p>
           
           <div class="payment-method">
             <strong>📱 СБП (по номеру телефона):</strong>

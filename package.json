@@ -16,5 +16,8 @@
   "dependencies": {
     "canvas-confetti": "^1.9.4",
     "pg": "^8.22.0"
+  },
+  "allowScripts": {
+    "esbuild@0.27.2": true
   }
 }
