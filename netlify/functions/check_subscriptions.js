@@ -42,6 +42,13 @@ function sendReminderEmail(email, childName) {
 
 exports.handler = async () => {
   try {
+    // Удаляем заброшенные заявки старше 3 дней без оплаты
+    await pool.query(`
+      DELETE FROM applications
+      WHERE status = 'pending_payment'
+        AND created_at < NOW() - INTERVAL '3 days'
+    `);
+    
     // 1. Находим тех, кому нужно отправить напоминание за 30 дней
     const { rows: toRemind } = await pool.query(`
       SELECT id, email, child_name FROM profiles
