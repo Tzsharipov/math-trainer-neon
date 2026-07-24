@@ -66,6 +66,24 @@
       margin-top: 30px;
     }
     
+    .btn.demo-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn.demo-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: shine-sweep 2.5s ease-in-out infinite;
+}
+@keyframes shine-sweep {
+  0% { left: -75%; }
+  100% { left: 125%; }
+}
     @media (min-width: 640px) {
       .hero-buttons {
         flex-direction: row;
@@ -727,7 +745,7 @@
       
       <div class="hero-buttons">
         <a href="javascript:void(0)" class="btn btn-primary" onclick="openOrderModal()" style="font-size: clamp(18px, 3.5vw, 24px); padding: clamp(16px, 3vh, 22px) clamp(32px, 6vw, 50px);">Оформить доступ для обучения</a>
-        <a href="javascript:void(0)" class="btn" onclick="startDemo()" style="font-size: clamp(18px, 3.5vw, 24px); padding: clamp(16px, 3vh, 22px) clamp(32px, 6vw, 50px); background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: 2px solid #b45309; box-shadow: 0 4px 20px rgba(245,158,11,0.5); animation: pulse-demo 2s ease-in-out infinite;">🎯 Попробовать бесплатно</a>
+        <a href="javascript:void(0)" class="btn demo-shine" onclick="startDemo()" style="font-size: clamp(18px, 3.5vw, 24px); padding: clamp(16px, 3vh, 22px) clamp(32px, 6vw, 50px); background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: 2px solid #b45309; box-shadow: 0 4px 20px rgba(245,158,11,0.5);">🎯 Попробовать бесплатно</a>
       </div>
     </div>
   </section>
@@ -829,7 +847,7 @@
         <div style="display: flex; align-items: center; gap: 15px;">
           <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">🏫</div>
           <div>
-            <div style="font-weight: 900; color: #1f2937; font-size: clamp(15px, 2.5vw, 17px);">Образовательный центр «Орион, г.Сочи</div>
+            <div style="font-weight: 900; color: #1f2937; font-size: clamp(15px, 2.5vw, 17px);">Образовательный центр "Орион", г.Сочи</div>
             <div style="color: #6B7280; font-size: clamp(13px, 2vw, 15px);">Педагогический состав</div>
           </div>
         </div>
@@ -848,7 +866,7 @@
   </div>
 
   <div style="background: #fff7ed; border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-bottom: 25px; color: #92400e;">
-    <div style="font-size: 1.3em; font-weight: 900; margin-bottom: 5px;">🚀 СТАРТОВАЯ АКЦИЯ: Забери лучшую цену</div>
+    <div style="font-size: 1.3em; font-weight: 900; margin-bottom: 5px;">🚀 СТАРТОВАЯ АКЦИЯ: Заберите лучшую цену</div>
     <div style="font-size: 0.95em; margin-bottom: 15px;">Чем раньше оформляете доступ, тем дешевле!</div>
     <div style="text-align: left; display: inline-block; font-size: 1.05em; line-height: 1.8;">
       🔥 Первым 100 покупателям эксклюзив — <strong>100 ₽ / год</strong><br>

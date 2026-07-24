@@ -192,6 +192,13 @@
       const DEMO_LIMIT = 5;
       const METRIKA_ID = 107219867;
 
+      const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
+      let demoPrice = 100;
+      fetch(`${NETLIFY_URL}/.netlify/functions/get_price_status`)
+        .then(r => r.json())
+        .then(data => { demoPrice = data.price; })
+        .catch(() => {});
+
       function getCount() {
         return parseInt(localStorage.getItem(DEMO_KEY) || '0', 10);
       }
@@ -231,7 +238,7 @@
               Чтобы закрепить успех и стать отличником, открой полный доступ к <strong>1000+ примеров</strong>.
             </p>
             <button onclick="window.location.href='index.html#pricing'" style="display:block;width:100%;background:linear-gradient(135deg,#10B981,#059669);color:white;border:none;border-radius:14px;padding:18px 24px;font-size:clamp(16px,3.5vw,20px);font-weight:900;cursor:pointer;margin-bottom:12px;box-shadow:0 4px 15px rgba(16,185,129,0.4);">
-              🎓 Открыть полный доступ — 990 ₽
+              🎓 Открыть полный доступ — ${demoPrice} ₽
             </button>
             ${!allModulesDone ? `<button onclick="window.location.href='app.html'" style="display:block;width:100%;background:#f3f4f6;color:#6b7280;border:none;border-radius:14px;padding:14px 24px;font-size:clamp(14px,3vw,16px);font-weight:700;cursor:pointer;">
               Попробовать другой модуль
