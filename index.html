@@ -102,6 +102,36 @@
   animation: banner-pulse 1.2s ease-in-out infinite;
 }
 
+@keyframes hero-hint-glow {
+  0%, 100% {
+    transform: scale(1);
+    background: #ea0cdb;
+    box-shadow: 0 4px 15px rgba(234,88,12,0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    background: #ea0cc5;
+    box-shadow: 0 10px 40px rgba(234,88,12,0.9);
+  }
+}
+#heroPriceHint {
+  animation: hero-hint-glow 2.0s ease-in-out infinite;
+}
+
+@keyframes sticky-glow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 -4px 20px rgba(168,85,247,0.5);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 -6px 35px rgba(168,85,247,0.8);
+  }
+}
+#stickyBar {
+  animation: sticky-glow 3.0s ease-in-out infinite;
+}
+
 
 
     @media (min-width: 640px) {
@@ -762,6 +792,7 @@
       <h1>🎓 Умножение столбиком и деление уголком — это просто. Полное освоение алгоритмов за 2 недели</h1>
       <p class="subtitle">Без слёз над домашкой и споров с родителями</p>
       <p class="for-grade">Интерактивный тренажёр для учеников 2-4 класса</p>
+      <div id="heroPriceHint" style="display: none; margin: 15px auto 0; padding: 12px 24px; border-radius: 12px; font-weight: 900; font-size: clamp(14px, 3vw, 18px); color: white; line-height: 1.4; max-width: 90%;"></div>
       
       <div class="hero-buttons">
         <a href="javascript:void(0)" class="btn btn-primary" onclick="openOrderModal()" style="font-size: clamp(18px, 3.5vw, 24px); padding: clamp(16px, 3vh, 22px) clamp(32px, 6vw, 50px);">Оформить доступ для обучения</a>
@@ -1029,15 +1060,15 @@ async function updatePriceDisplay() {
     const paymentEl = document.getElementById('paymentAmountText');
     if (paymentEl) paymentEl.textContent = currentPrice;
 
+    let remaining = null;
+    if (data.price === 100) {
+      remaining = 100 - data.count;
+    } else if (data.price === 200) {
+      remaining = 300 - data.count;
+    }
+
     const banner = document.getElementById('scarcityBanner');
     if (banner) {
-      let remaining = null;
-      if (data.price === 100) {
-        remaining = 100 - data.count;
-      } else if (data.price === 200) {
-        remaining = 300 - data.count;
-      }
-
       if (remaining !== null && remaining > 0 && remaining <= 100) {
         banner.style.display = 'block';
         banner.textContent = '🔥 ОСТАЛОСЬ ВСЕГО ' + remaining + ' ПОДПИСОК ПО ' + currentPrice + '₽!';
@@ -1045,11 +1076,48 @@ async function updatePriceDisplay() {
         banner.style.display = 'none';
       }
     }
+
+  const heroHint = document.getElementById('heroPriceHint');
+    if (heroHint) {
+      if (remaining !== null && remaining > 0) {
+        heroHint.style.display = 'inline-block';
+        const priceLabel = (currentPrice === 100) ? 'первым покупателям' : 'текущая цена';
+        heroHint.textContent = '🚀 Стартовая акция: ' + priceLabel + ' — всего ' + currentPrice + '₽/год вместо 490₽. Осталось ' + remaining + ' мест — зафиксируйте цену на 12 месяцев!';
+      } else {
+        heroHint.style.display = 'none';
+      }
+    }
+
+    // Обновляем текст на всех кнопках "Оформить доступ"
+    const buttonText = (remaining !== null && remaining > 0)
+      ? 'Оформить доступ для обучения за ' + currentPrice + ' руб.'
+      : 'Оформить доступ для обучения';
+
+    document.querySelectorAll('.hero-buttons .btn-primary, .cta button.btn-primary').forEach(btn => {
+      btn.textContent = buttonText;
+    });
+
+    // Счётчик проданных подписок в нижней панели
+    const soldCountEl = document.getElementById('soldCount');
+    if (soldCountEl) soldCountEl.textContent = data.count;
+
+    const stickyBar = document.getElementById('stickyBar');
+    const stickyRemainingEl = document.getElementById('stickyRemaining');
+    const stickyPriceEl = document.getElementById('stickyPrice');
+    if (stickyBar) {
+      if (remaining !== null && remaining > 0) {
+        stickyBar.style.display = 'flex';
+        if (stickyRemainingEl) stickyRemainingEl.textContent = remaining;
+        if (stickyPriceEl) stickyPriceEl.textContent = currentPrice;
+      } else {
+        stickyBar.style.display = 'none';
+      }
+    }
   } catch (e) {
     console.error('Не удалось получить актуальную цену', e);
   }
 }
-updatePriceDisplay();
+window.addEventListener('DOMContentLoaded', updatePriceDisplay);
 
  
     window.openOrderModal = function() {
@@ -1269,8 +1337,18 @@ updatePriceDisplay();
           <p style="margin-top: 10px; font-size: 14px; color: #6b7280;">
             или на email: <a href="/cdn-cgi/l/email-protection#82f6f8f1eae3f0ebf2edf4c2e5efe3ebeeace1edef"><span class="__cf_email__" data-cfemail="e0949a9388819289908f96a0878d81898cce838f8d">[email&#160;protected]</span></a>
           </p>
-              </div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div id="stickyBar" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; padding: 22px 20px; z-index: 9998; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; background: linear-gradient(135deg, #a855f7, #7e22ce);">
+    <span style="font-weight: 900; color: white; font-size: clamp(16px, 3.5vw, 22px); text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+      🔥 Осталось <span id="stickyRemaining">100</span> мест по <span id="stickyPrice">100</span>₽! Уже куплено: <span id="soldCount">0</span>
+    </span>
+    <button onclick="openOrderModal()" style="background: white; color: #7e22ce; border: none; padding: 14px 30px; border-radius: 10px; font-weight: 900; cursor: pointer; font-size: clamp(15px, 3vw, 17px); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+      Оформить доступ →
+    </button>
   </div>
 
 </body>
