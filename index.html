@@ -84,6 +84,26 @@
   0% { left: -75%; }
   100% { left: 125%; }
 }
+
+@keyframes banner-pulse {
+  0%, 100% {
+    transform: scale(1);
+    background: linear-gradient(135deg, #a855f7, #7e22ce);
+    box-shadow: 0 4px 15px rgba(168,85,247,0.4);
+  }
+  50% {
+    transform: scale(1.06);
+    background: linear-gradient(135deg, #c084fc, #a855f7);
+    box-shadow: 0 8px 30px rgba(168,85,247,0.7);
+  }
+}
+
+#scarcityBanner {
+  animation: banner-pulse 1.2s ease-in-out infinite;
+}
+
+
+
     @media (min-width: 640px) {
       .hero-buttons {
         flex-direction: row;
@@ -874,7 +894,12 @@
       🔒 Далее — <strong>490 ₽ / год</strong>
     </div>
     <div style="font-size: 0.85em; opacity: 0.85; margin-top: 12px;">💡 Зафиксируем вашу цену на 12 месяцев с момента оплаты.</div>
+<div id="scarcityBanner" style="display: none; color: white; font-weight: 900; padding: 16px 20px; border-radius: 10px; margin-top: 15px; font-size: 1.2em; text-align: center;"></div>
   </div>
+
+  <button class="promo-cta-btn" onclick="openOrderModal()" id="mainCtaBtn">
+    Оформить доступ за <span id="ctaPriceText">100 ₽</span> / год
+  </button>
 
   <div class="price-compare no-pin">
     <p>Это выгоднее, чем обычные альтернативы:</p>
@@ -883,14 +908,10 @@
     <p>❌ Комплект печатных тетрадей-тренажёров — от 600₽</p>
   </div>
 
-  <button class="promo-cta-btn" onclick="openOrderModal()" id="mainCtaBtn">
-    Оформить доступ за <span id="ctaPriceText">100 ₽</span> / год
-  </button>
-
   <div class="payment-info">
     <p>💳 Оплата картой или СБП</p>
     <p>🔒 Безопасная передача данных</p>
-    <p>✓ Доступ открывается в течение 1-2 часов</p>
+    <p>✓ Доступ открывается сразу после оплаты</p>
   </div>
 </div>
       
@@ -930,7 +951,7 @@
         
         <div class="faq-item">
           <div class="faq-question">Как получить доступ после оплаты?</div>
-          <div class="faq-answer">После оплаты вы получите логин и пароль на email в течение 1-2 часов. Можно сразу начинать заниматься!</div>
+          <div class="faq-answer">После оплаты логин и пароль автоматически придут вам на email в течение нескольких минут. Можно сразу начинать заниматься!</div>
         </div>
       </div>
     </div>
@@ -983,6 +1004,19 @@
     
     let currentPrice = 100;
 
+function animateCounter(element, target) {
+  let current = 0;
+  const step = Math.max(1, Math.ceil(target / 20));
+  const interval = setInterval(() => {
+    current += step;
+    if (current >= target) {
+      current = target;
+      clearInterval(interval);
+    }
+    element.textContent = current;
+  }, 40);
+}
+
 async function updatePriceDisplay() {
   try {
     const response = await fetch(`${NETLIFY_URL}/.netlify/functions/get_price_status`);
@@ -994,6 +1028,23 @@ async function updatePriceDisplay() {
 
     const paymentEl = document.getElementById('paymentAmountText');
     if (paymentEl) paymentEl.textContent = currentPrice;
+
+    const banner = document.getElementById('scarcityBanner');
+    if (banner) {
+      let remaining = null;
+      if (data.price === 100) {
+        remaining = 100 - data.count;
+      } else if (data.price === 200) {
+        remaining = 300 - data.count;
+      }
+
+      if (remaining !== null && remaining > 0 && remaining <= 100) {
+        banner.style.display = 'block';
+        banner.textContent = '🔥 ОСТАЛОСЬ ВСЕГО ' + remaining + ' ПОДПИСОК ПО ' + currentPrice + '₽!';
+      } else {
+        banner.style.display = 'none';
+      }
+    }
   } catch (e) {
     console.error('Не удалось получить актуальную цену', e);
   }
