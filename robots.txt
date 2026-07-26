@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin_restored.html
+Disallow: /settings.html
+Disallow: /index_neu.html
+
+Sitemap: https://stolbik.online/sitemap.xml
