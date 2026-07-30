@@ -793,45 +793,39 @@
     if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
   })(document, window, "tmr-code");
   </script>
-  <noscript><img src="https://top-fwz1.mail.ru/counter?id=3782629;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></noscript>
   <!-- /Top.Mail.Ru counter -->
 </head>
 <body>
+<noscript><img src="https://top-fwz1.mail.ru/counter?id=3782629;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></noscript>
 
   <!-- Кнопка входа — фиксированная в правом верхнем углу -->
   <a href="app.html" style="position:fixed;top:16px;right:16px;z-index:9999;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:10px 20px;border-radius:10px;font-weight:900;font-size:clamp(12px,2vw,15px);text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,0.25);white-space:nowrap;">🔑 Войти</a>
 
-  <!-- Прилипающая кнопка снизу — ТОЛЬКО на мобильных, всегда видна без прокрутки -->
+  <!-- Отдельная, изолированная кнопка "Попробовать бесплатно" — видна сразу, только на мобильных -->
   <style>
-    #stickyMobileCta { display: none; }
+    #tryFreeSticky { display: none; }
     @media (max-width: 640px) {
-      #stickyMobileCta {
+      #tryFreeSticky {
         display: block;
         position: fixed;
-        left: 0; right: 0; bottom: 0;
-        z-index: 9998;
-        padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-        background: rgba(255,255,255,0.97);
-        backdrop-filter: blur(6px);
-        box-shadow: 0 -4px 18px rgba(0,0,0,0.18);
+        left: 12px; right: 12px; bottom: 90px;
+        z-index: 9997;
       }
-      #stickyMobileCta button {
+      #tryFreeSticky button {
         width: 100%;
-        border: none;
+        border: 2px solid #b45309;
         border-radius: 12px;
         padding: 14px 10px;
         font-size: 16px;
         font-weight: 900;
         color: white;
         background: linear-gradient(135deg, #f59e0b, #d97706);
-        box-shadow: 0 4px 14px rgba(245,158,11,0.45);
+        box-shadow: 0 4px 16px rgba(245,158,11,0.5);
       }
-      /* Небольшой отступ снизу у страницы, чтобы панель не перекрывала последний контент */
-      body { padding-bottom: 72px; }
     }
   </style>
-  <div id="stickyMobileCta">
-    <button onclick="openOrderModal()">🎯 Попробовать бесплатно</button>
+  <div id="tryFreeSticky">
+    <button onclick="startDemo()">🎯 Попробовать бесплатно</button>
   </div>
 
   <!-- Hero Section -->
