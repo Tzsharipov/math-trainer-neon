@@ -110,6 +110,18 @@
         <option value="3">3-значное делитель</option>
         <option value="4">4-значное делитель</option>
       </select>
+      <div class="flex flex-col gap-2 mb-2 text-sm">
+        <span class="text-xs font-black uppercase text-blue-800 px-1">Что тренируем?</span>
+        <label class="flex items-center gap-3 p-3 rounded-2xl bg-white/10 cursor-pointer hover:bg-white/20 transition-all">
+          <input type="radio" name="exampleType" value="normal" checked class="w-4 h-4 accent-blue-600">
+          <span class="font-bold text-blue-800">Обычные примеры</span>
+        </label>
+        <label class="flex items-center gap-3 p-3 rounded-2xl bg-white/10 cursor-pointer hover:bg-white/20 transition-all">
+          <input type="radio" name="exampleType" value="zeroInside" class="w-4 h-4 accent-blue-600">
+          <span class="font-bold text-blue-800">Не забываем ноль!</span>
+        </label>
+        <span class="text-xs text-blue-800/70 px-1">Примеры, где в ответе нужно записать 0</span>
+      </div>
       <button id="btnGen" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-xl text-sm active:scale-95 transition-all">
         Создать пример
       </button>

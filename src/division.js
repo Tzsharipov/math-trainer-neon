@@ -1,6 +1,5 @@
 import './style.css';
-import { generateNumber, hasZeroInside } from './division/divisionHelpers.js';
-import { buildGrid } from './division/divisionGrid.js';
+import { generateNumber, hasZeroInside, buildExample } from './division/divisionHelpers.js';import { buildGrid } from './division/divisionGrid.js';
 import { checkProduct, checkDifference, checkQuotient } from './division/divisionCheck.js';
 import { updateHighlights, updateHighlightsForStep } from './division/divisionHighlights.js';
 import { updateHintMessage, clearHintMessage } from './division/divisionHints.js';
@@ -25,6 +24,46 @@ const settingsPanel = document.querySelector('#settingsPanel');
 const btnNewExample = document.querySelector('#btnNewExample');
 const btnBackToSettings = document.querySelector('#btnBackToSettings');
 
+function getExampleType() {
+  const el = document.querySelector('input[name="exampleType"]:checked');
+  return el ? el.value : 'normal';
+}
+
+const ALL_DIVIDEND_OPTIONS = [3, 4, 5, 6, 7];
+
+// Прячет из списка "разрядность делимого" варианты, для которых
+// "Не забываем ноль!" физически невозможен (частное короче 3 цифр)
+function updateDividendOptions() {
+  const type = getExampleType();
+  const divisorDigits = parseInt(selectDivisor.value);
+  const currentValue = selectDividend.value;
+
+  let allowed = ALL_DIVIDEND_OPTIONS;
+  if (type === 'zeroInside') {
+    const minDividend = divisorDigits + 2;
+    allowed = ALL_DIVIDEND_OPTIONS.filter(v => v >= minDividend);
+  }
+
+  selectDividend.innerHTML = '';
+  allowed.forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v;
+    opt.textContent = `${v}-значное делимое`;
+    selectDividend.appendChild(opt);
+  });
+
+  if (allowed.includes(parseInt(currentValue))) {
+    selectDividend.value = currentValue;
+  } else if (allowed.length > 0) {
+    selectDividend.value = String(allowed[0]);
+  }
+}
+
+document.querySelectorAll('input[name="exampleType"]').forEach(radio => {
+  radio.onchange = updateDividendOptions;
+});
+selectDivisor.onchange = updateDividendOptions;
+updateDividendOptions();
 // Ð“Ð»Ð¾Ð±Ð°Ð»ÑŒÐ½Ð¾Ðµ ÑÐ¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ
 let dividend = 0;
 let divisor = 0;
@@ -67,33 +106,21 @@ btnGen.onclick = () => {
     
     dividend = num1;
     divisor = num2;
-  } else {
+} else {
     const dividendDigits = parseInt(selectDividend.value);
     const divisorDigits = parseInt(selectDivisor.value);
-    
-    let attempts = 0;
-    let validExample = false;
-    
-    while (!validExample && attempts < 100) {
-      attempts++;
-      
-      divisor = generateNumber(divisorDigits);
-      const quotientDigitsCount = dividendDigits - divisorDigits + 1;
-      const q = generateNumber(quotientDigitsCount);
-      dividend = q * divisor;
-      
-      if (String(dividend).length !== dividendDigits) continue;
-      if (hasZeroInside(dividend) || hasZeroInside(divisor)) continue;
-      if (String(q).includes('0')) continue;
-      
-      validExample = true;
-    }
-    
-    if (!validExample) {
-      divisor = generateNumber(divisorDigits);
-      const quotientDigitsCount = dividendDigits - divisorDigits + 1;
-      const q = generateNumber(quotientDigitsCount);
-      dividend = q * divisor;
+    const exampleType = getExampleType();
+
+    const result = buildExample(dividendDigits, divisorDigits, exampleType);
+    if (result && !result.unsupported) {
+      dividend = result.dividend;
+      divisor = result.divisor;
+    } else {
+      const fallback = buildExample(dividendDigits, divisorDigits, 'normal');
+      if (fallback) {
+        dividend = fallback.dividend;
+        divisor = fallback.divisor;
+      }
     }
   }
   
@@ -143,33 +170,21 @@ btnNewExample.onclick = () => {
         dividend = q * divisor;
       }
     } else {
-      // В автоматическом режиме - генерируем с текущими настройками
+// В автоматическом режиме - генерируем с текущими настройками
       const dividendDigits = parseInt(selectDividend.value);
       const divisorDigits = parseInt(selectDivisor.value);
-      
-      let attempts = 0;
-      let validExample = false;
-      
-      while (!validExample && attempts < 100) {
-        attempts++;
-        
-        divisor = generateNumber(divisorDigits);
-        const quotientDigitsCount = dividendDigits - divisorDigits + 1;
-        const q = generateNumber(quotientDigitsCount);
-        dividend = q * divisor;
-        
-        if (String(dividend).length !== dividendDigits) continue;
-        if (hasZeroInside(dividend) || hasZeroInside(divisor)) continue;
-        if (String(q).includes('0')) continue;
-        
-        validExample = true;
-      }
-      
-      if (!validExample) {
-        divisor = generateNumber(divisorDigits);
-        const quotientDigitsCount = dividendDigits - divisorDigits + 1;
-        const q = generateNumber(quotientDigitsCount);
-        dividend = q * divisor;
+      const exampleType = getExampleType();
+
+      const result = buildExample(dividendDigits, divisorDigits, exampleType);
+      if (result && !result.unsupported) {
+        dividend = result.dividend;
+        divisor = result.divisor;
+      } else {
+        const fallback = buildExample(dividendDigits, divisorDigits, 'normal');
+        if (fallback) {
+          dividend = fallback.dividend;
+          divisor = fallback.divisor;
+        }
       }
     }
     
