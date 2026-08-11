@@ -47,7 +47,7 @@ export function checkProduct(stepIndex, steps, stepsData, quotientInputs, inputR
   }
 }
 
-export function checkDifference(stepIndex, steps, stepsData, inputRefs, hintsEnabled, onComplete) {
+export function checkDifference(stepIndex, steps, stepsData, inputRefs, hintsEnabled, dividend, divisor, quotientInputs, onComplete) {
   const step = steps[stepIndex]
   
   if (stepIndex >= stepsData.length) {
@@ -82,24 +82,33 @@ export function checkDifference(stepIndex, steps, stepsData, inputRefs, hintsEna
   
   // Ð•ÑÐ»Ð¸ Ð¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¾ Ð¸ ÑÑ‚Ð¾ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ð¹ ÑˆÐ°Ð³
   if (isCorrect && stepIndex === stepsData.length - 1) {
-    // Поздравление и конфетти после последней разности
-    const childName = localStorage.getItem('childName');
-    const message = childName ? '🥳 Умничка, ' + childName + '! Пример решён верно!' : '🥳 Пример решён верно!';
-    // Выводим поздравление в нижнюю подсказку (как в multiplication)
-    const sideHint = document.getElementById('sideHint');
-    const sideHintText = document.getElementById('sideHintText');
-    const sideHintBox = sideHint ? sideHint.querySelector('div') : null;
-    if (sideHintText) sideHintText.textContent = message;
-    if (sideHintBox) sideHintBox.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-    if (sideHint) sideHint.style.visibility = 'visible';
-    
-    if (window.confetti) {
-      confetti({ particleCount: 200, spread: 120, origin: { x: 0.5, y: 0.6 }, colors: ['#FFD700', '#FF6347', '#00CED1', '#32CD32', '#FF69B4'], scalar: 1.5 });
-      setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.6 }, colors: ['#FFD700', '#FF6347', '#00CED1'], scalar: 1.5 }), 300);
-      setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.6 }, colors: ['#32CD32', '#FF69B4', '#FFD700'], scalar: 1.5 }), 600);
+    // Завершать пример можно только когда ВСЁ частное (включая возможные
+    // хвостовые нули после этого шага) заполнено и верно — не просто
+    // когда этот последний шаг сам по себе верен.
+    const correctQuotientStr = String(Math.floor(dividend / divisor));
+    const quotientFullyCorrect = quotientInputs.length === correctQuotientStr.length &&
+      quotientInputs.every((q, i) => q === correctQuotientStr[i]);
+
+    if (quotientFullyCorrect) {
+      // Поздравление и конфетти после последней разности
+      const childName = localStorage.getItem('childName');
+      const message = childName ? '🥳 Умничка, ' + childName + '! Пример решён верно!' : '🥳 Пример решён верно!';
+      // Выводим поздравление в нижнюю подсказку (как в multiplication)
+      const sideHint = document.getElementById('sideHint');
+      const sideHintText = document.getElementById('sideHintText');
+      const sideHintBox = sideHint ? sideHint.querySelector('div') : null;
+      if (sideHintText) sideHintText.textContent = message;
+      if (sideHintBox) sideHintBox.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+      if (sideHint) sideHint.style.visibility = 'visible';
+
+      if (window.confetti) {
+        confetti({ particleCount: 200, spread: 120, origin: { x: 0.5, y: 0.6 }, colors: ['#FFD700', '#FF6347', '#00CED1', '#32CD32', '#FF69B4'], scalar: 1.5 });
+        setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.6 }, colors: ['#FFD700', '#FF6347', '#00CED1'], scalar: 1.5 }), 300);
+        setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { x: 0.5, y: 0.6 }, colors: ['#32CD32', '#FF69B4', '#FFD700'], scalar: 1.5 }), 600);
+      }
+      clearHighlights(inputRefs);
+      if (onComplete) onComplete();
     }
-    clearHighlights(inputRefs);
-    if (onComplete) onComplete();
   }
 }
 

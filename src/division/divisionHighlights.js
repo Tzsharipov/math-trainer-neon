@@ -52,9 +52,10 @@ export function updateHighlightsForStep(stepIndex, inputRefs, stepsData, dividen
   const sd = stepsData[stepIndex]
   if (!sd) return
   
-  const pdStr = String(sd.partialDividend)
-  const len = pdStr.length
-  const offset = clampInt(sd.offset, 0, dividendDigitsArray.length - 1)
+  const productStr = String(sd.product)
+  const len = productStr.length
+  // Произведение выровнено по правому краю неполного делимого.
+  const offset = clampInt(sd.offset + String(sd.partialDividend).length - len, 0, dividendDigitsArray.length - 1)
   
   for (let c = offset; c < offset + len; c++) {
     const key = `${stepIndex}:product:${c}`
@@ -81,9 +82,9 @@ export function updateHighlights(focusedRow, inputRefs, stepsData, dividendDigit
   if (!stepDatum) return
   
   if (focusedRow.type === 'product') {
-    const pdStr = String(stepDatum.partialDividend)
-    const len = pdStr.length
-    const offset = clampInt(stepDatum.offset, 0, dividendDigitsArray.length - 1)
+    const productStr = String(stepDatum.product)
+    const len = productStr.length
+    const offset = clampInt(stepDatum.offset + String(stepDatum.partialDividend).length - len, 0, dividendDigitsArray.length - 1)
     
     for (let c = offset; c < offset + len; c++) {
       const key = `${stepIndex}:product:${c}`
@@ -103,11 +104,12 @@ export function updateHighlights(focusedRow, inputRefs, stepsData, dividendDigit
         highlightElement(inputRefs[key], 'hint', hintsEnabled)
       }
     } else {
-      // Последний шаг — подсвечиваем ВСЕ ячейки разности (нужно заполнить нулями)
-      const pdStr = String(stepDatum.partialDividend)
-      const pdLen = pdStr.length
-      const pdOffset = clampInt(stepDatum.offset, 0, dividendDigitsArray.length - 1)
-      for (let c = pdOffset; c < pdOffset + pdLen; c++) {
+      // Последний шаг — подсвечиваем ячейки разности по ширине ОСТАТКА
+      // (а не неполного делимого — это разные числа и разная ширина).
+      const remStr = String(stepDatum.remainder)
+      const remLen = remStr.length
+      const remOffset = clampInt(stepDatum.offset + String(stepDatum.partialDividend).length - remLen, 0, dividendDigitsArray.length - 1)
+      for (let c = remOffset; c < remOffset + remLen; c++) {
         const key = `${stepIndex}:difference:${c}`
         highlightElement(inputRefs[key], 'hint', hintsEnabled)
       }
