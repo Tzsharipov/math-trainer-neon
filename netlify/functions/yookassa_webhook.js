@@ -7,6 +7,18 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+// Сообщает VK Рекламе о подтверждённой покупке — вызывается только когда оплата реально прошла
+function sendVkConversion(rbClickId) {
+  return new Promise((resolve) => {
+    if (!rbClickId) return resolve();
+    const url = `https://top-fwz1.mail.ru/tracker?id=3782629;e=RG%3A/purchase_completed;rb_clickid=${encodeURIComponent(rbClickId)}`;
+    https.get(url, (res) => {
+      res.on('data', () => {});
+      res.on('end', resolve);
+    }).on('error', () => resolve());
+  });
+}
+
 function generatePassword() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
   let password = '';
@@ -87,8 +99,11 @@ exports.handler = async (event) => {
       ['completed', userId, applicationId]
     );
 
-    // Увеличиваем счётчик покупок — это то, что двигает цену 100 → 200 → 490
+        // Увеличиваем счётчик покупок — это то, что двигает цену 100 → 200 → 490
     await pool.query('UPDATE purchase_counter SET count = count + 1 WHERE id=1');
+
+    // Сообщаем VK Рекламе о конверсии — только сейчас, когда оплата точно подтверждена
+    await sendVkConversion(application.rb_click_id);
 
     const resendKey = process.env.RESEND_API_KEY;
     if (resendKey) {

@@ -1046,7 +1046,10 @@
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Открытие формы заявки
-    const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
+        const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
+
+    // VK Реклама подставляет этот параметр в адрес при переходе по объявлению
+    const rbClickId = new URLSearchParams(window.location.search).get('rb_clickid') || null;
     
     let currentPrice = 100;
 
@@ -1181,7 +1184,8 @@ window.addEventListener('DOMContentLoaded', updatePriceDisplay);
             email,
             childName,
             payerName,
-            telegram: telegram || null
+            telegram: telegram || null,
+            rbClickId
           })
         });
         

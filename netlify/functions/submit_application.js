@@ -17,7 +17,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { email, childName, payerName, telegram } = JSON.parse(event.body);
+    const { email, childName, payerName, telegram, rbClickId } = JSON.parse(event.body);
 
     if (!email || !childName || !payerName) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Заполните все обязательные поля' }) };
@@ -33,10 +33,10 @@ exports.handler = async (event) => {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     const applicationNumber = `APP-${dateStr}-${randomNum}`;
 
-    const { rows } = await pool.query(
-      `INSERT INTO applications (application_number, email, child_name, payer_name, telegram, status, created_at)
-       VALUES ($1, $2, $3, $4, $5, 'pending_payment', NOW()) RETURNING *`,
-      [applicationNumber, email.toLowerCase().trim(), childName.trim(), payerName.trim(), telegram ? telegram.trim() : null]
+       const { rows } = await pool.query(
+      `INSERT INTO applications (application_number, email, child_name, payer_name, telegram, rb_click_id, status, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, 'pending_payment', NOW()) RETURNING *`,
+      [applicationNumber, email.toLowerCase().trim(), childName.trim(), payerName.trim(), telegram ? telegram.trim() : null, rbClickId || null]
     );
 
     return { statusCode: 200, headers, body: JSON.stringify({ success: true, applicationId: rows[0].id, applicationNumber, message: 'Заявка успешно создана' }) };
