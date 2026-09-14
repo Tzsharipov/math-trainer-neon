@@ -794,6 +794,31 @@
   })(document, window, "tmr-code");
   </script>
   <!-- /Top.Mail.Ru counter -->
+  <script type="application/ld+json" id="productSchema">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalApplication",
+    "name": "Столбик — тренажёр умножения и деления столбиком",
+    "url": "https://stolbik.online/",
+    "description": "Интерактивный веб-тренажёр для детей 2-4 класса: умножение столбиком и деление уголком с пошаговой проверкой каждого разряда, без скачивания и распечаток.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "inLanguage": "ru",
+    "isAccessibleForFree": false,
+    "audience": {
+      "@type": "EducationalAudience",
+      "educationalRole": "student"
+    },
+    "educationalLevel": "2-4 класс начальной школы",
+    "about": [
+      "умножение столбиком",
+      "деление уголком",
+      "математика начальная школа",
+      "деление с остатком"
+    ]
+  }
+  </script>
 </head>
 <body>
 <noscript><img src="https://top-fwz1.mail.ru/counter?id=3782629;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></noscript>
@@ -1071,6 +1096,22 @@ async function updatePriceDisplay() {
     const response = await fetch(`${NETLIFY_URL}/.netlify/functions/get_price_status`);
     const data = await response.json();
     currentPrice = data.price;
+        const schemaEl = document.getElementById('productSchema');
+    if (schemaEl) {
+      try {
+        const schemaData = JSON.parse(schemaEl.textContent);
+        schemaData.offers = {
+          "@type": "Offer",
+          "price": String(currentPrice),
+          "priceCurrency": "RUB",
+          "availability": "https://schema.org/InStock",
+          "url": "https://stolbik.online/"
+        };
+        schemaEl.textContent = JSON.stringify(schemaData);
+      } catch (e) {
+        console.error('Не удалось обновить цену в JSON-LD', e);
+      }
+    }
 
     const ctaEl = document.getElementById('ctaPriceText');
     if (ctaEl) ctaEl.textContent = currentPrice + ' ₽';
