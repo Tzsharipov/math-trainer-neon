@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="metrika.js"></script>
+  <link rel="canonical" href="https://stolbik.online/trenazher-stolbik-4-klass.html" />
+  <meta name="description" content="Тренажёр умножения и деления в столбик для 4 класса онлайн. Многозначные числа, деление с остатком, подсказка на каждом шаге. Первым 100 — доступ за 100₽/год." />
+  <title>Тренажёр умножения и деления в столбик для 4 класса</title>
+
+  <script type="application/ld+json" id="productSchema">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalApplication",
+    "name": "Тренажёр умножения и деления в столбик для 4 класса",
+    "description": "Онлайн-тренажёр умножения и деления в столбик для учеников 4 класса: многозначные числа, деление с остатком. Пошаговые подсказки на каждом действии, система не даёт застрять на ошибке.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any",
+    "url": "https://stolbik.online/trenazher-stolbik-4-klass.html",
+    "about": ["умножение в столбик 4 класс", "деление в столбик 4 класс", "математика 4 класс"],
+    "audience": {
+      "@type": "EducationalAudience",
+      "educationalRole": "student"
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "RUB",
+      "price": "100",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json" id="faqSchema">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Есть ли тренажёр умножения и деления в столбик специально для 4 класса?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Да, Stolbik.online — интерактивный тренажёр с модулями под программу 4 класса: умножение и деление многозначных чисел в столбик, включая деление с остатком."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Соответствует ли тренажёр школьной программе 4 класса?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Да, задания построены по темам ФГОС для 4 класса: умножение и деление в столбик на однозначное и двузначное число, деление с остатком."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Чем тренажёр отличается от готовых примеров и калькуляторов?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Калькулятор просто показывает готовое решение — ребёнок его перепишет и ничему не научится. Тренажёр заставляет ввести каждую цифру разряда самостоятельно и сразу подсказывает, где ошибка."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Умеет ли тренажёр делить с остатком?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Да, деление с остатком — одна из тем модуля «Деление в столбик», актуальная именно для программы 4 класса."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Нужно устанавливать программу?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Нет. Тренажёр работает прямо в браузере на телефоне, планшете или компьютере — ничего скачивать не нужно."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background: #f9fafb;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: clamp(60px, 10vh, 120px) 20px clamp(40px, 8vh, 80px);
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(26px, 5.5vw, 44px);
+      font-weight: 900;
+      margin-bottom: 20px;
+      line-height: 1.25;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero .subtitle {
+      font-size: clamp(16px, 3vw, 22px);
+      margin-bottom: 15px;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+
+    .hero .for-grade {
+      font-size: clamp(16px, 3vw, 22px);
+      opacity: 0.9;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .btn.demo-shine {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn.demo-shine::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+      animation: shine-sweep 2.5s ease-in-out infinite;
+    }
+    @keyframes shine-sweep {
+      0% { left: -75%; }
+      100% { left: 125%; }
+    }
+
+    @keyframes banner-pulse {
+      0%, 100% {
+        transform: scale(1);
+        background: linear-gradient(135deg, #a855f7, #7e22ce);
+        box-shadow: 0 4px 15px rgba(168,85,247,0.4);
+      }
+      50% {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #c084fc, #a855f7);
+        box-shadow: 0 8px 30px rgba(168,85,247,0.7);
+      }
+    }
+    #scarcityBanner {
+      animation: banner-pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes hero-hint-glow {
+      0%, 100% {
+        transform: scale(1);
+        background: #ea0cdb;
+        box-shadow: 0 4px 15px rgba(234,88,12,0.5);
+      }
+      50% {
+        transform: scale(1.1);
+        background: #ea0cc5;
+        box-shadow: 0 10px 40px rgba(234,88,12,0.9);
+      }
+    }
+    #heroPriceHint {
+      animation: hero-hint-glow 2.0s ease-in-out infinite;
+    }
+
+    @keyframes sticky-glow {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 -4px 20px rgba(168,85,247,0.5);
+      }
+      50% {
+        transform: scale(1.03);
+        box-shadow: 0 -6px 35px rgba(168,85,247,0.8);
+      }
+    }
+    #stickyBar {
+      animation: sticky-glow 3.0s ease-in-out infinite;
+    }
+
+    @media (min-width: 640px) {
+      .hero-buttons {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+
+    .btn {
+      display: inline-block;
+      padding: clamp(14px, 2.5vh, 18px) clamp(28px, 5vw, 40px);
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: clamp(16px, 3vw, 20px);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      border: 2px solid #047857;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    section {
+      padding: clamp(40px, 8vh, 80px) 20px;
+    }
+
+    .section-title {
+      font-size: clamp(24px, 5vw, 36px);
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: clamp(30px, 5vh, 50px);
+      color: #1f2937;
+    }
+
+    .problems {
+      background: white;
+    }
+
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .problem-item {
+      background: #FEF2F2;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid #EF4444;
+    }
+
+    .problem-item::before {
+      content: "❌";
+      font-size: 24px;
+      margin-right: 10px;
+    }
+
+    .problem-item p {
+      font-size: clamp(14px, 2.5vw, 16px);
+      color: #991B1B;
+      font-weight: 600;
+    }
+
+    .solution {
+      background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .feature-item {
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .feature-item::before {
+      content: "✅";
+      font-size: 28px;
+      margin-right: 10px;
+    }
+
+    .feature-item p {
+      font-size: clamp(14px, 2.5vw, 16px);
+      color: #065F46;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .modules {
+      background: white;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .module-card {
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .module-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .module-title {
+      font-size: clamp(20px, 4vw, 24px);
+      font-weight: 900;
+      margin-bottom: 10px;
+      color: #4338CA;
+    }
+
+    .module-desc {
+      font-size: clamp(14px, 2.5vw, 16px);
+      color: #4B5563;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .module-level {
+      display: inline-block;
+      background: #10B981;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .module-gif {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      margin: 15px auto 10px;
+      display: block;
+    }
+
+    .pricing {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .pricing .section-title {
+      color: white;
+    }
+
+    .price-compare {
+      background: #F3F4F6;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 30px 0;
+      text-align: left;
+    }
+
+    .price-compare p {
+      font-size: clamp(14px, 2.5vw, 16px);
+      color: #4B5563;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .price-compare.no-pin p::before { content: none; }
+
+    .payment-info {
+      margin-top: 25px;
+      font-size: clamp(13px, 2.5vw, 14px);
+      color: #6B7280;
+      text-align: center;
+    }
+
+    .payment-info p {
+      margin: 5px 0;
+    }
+
+    .promo-block .payment-info {
+      text-align: center;
+    }
+
+    .faq {
+      background: white;
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: #F9FAFB;
+      padding: 25px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
+    }
+
+    .faq-question {
+      font-size: clamp(16px, 3vw, 18px);
+      font-weight: 900;
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+
+    .faq-question::before {
+      content: "❓";
+      margin-right: 10px;
+    }
+
+    .faq-answer {
+      font-size: clamp(14px, 2.5vw, 16px);
+      color: #4B5563;
+      line-height: 1.6;
+    }
+
+    .cta {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .cta .section-title {
+      color: white;
+    }
+
+    .cta-text {
+      font-size: clamp(16px, 3vw, 20px);
+      margin-bottom: 30px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .cta-note {
+      margin-top: 25px;
+      font-size: clamp(14px, 2.5vw, 16px);
+      opacity: 0.9;
+      font-weight: 600;
+    }
+
+    footer {
+      background: #1f2937;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    footer a {
+      color: #10B981;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .login-link {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .login-link a {
+      color: #60A5FA;
+      font-size: clamp(14px, 2.5vw, 16px);
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: clamp(30px, 5vw, 50px);
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #9ca3af;
+      transition: color 0.3s;
+    }
+
+    .modal-close:hover {
+      color: #374151;
+    }
+
+    .modal-title {
+      font-size: clamp(22px, 4vw, 28px);
+      font-weight: 900;
+      color: #667eea;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group label .required {
+      color: #ef4444;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .success-screen {
+      display: none;
+      text-align: center;
+    }
+
+    .success-screen.active {
+      display: block;
+    }
+
+    .application-number {
+      background: #f3f4f6;
+      border: 2px solid #667eea;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      font-size: clamp(18px, 4vw, 24px);
+      font-weight: 900;
+      color: #667eea;
+    }
+
+    .payment-info {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .payment-info h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 15px;
+    }
+
+    .payment-method {
+      margin-bottom: 15px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .payment-method strong {
+      display: block;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+
+    .copy-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 16px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .copy-btn:hover {
+      background: #5568d3;
+    }
+
+    .warning-box {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      font-weight: 600;
+      color: #92400e;
+    }
+
+    .contact-info {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f0f9ff;
+      border-radius: 8px;
+    }
+
+    .telegram-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 12px 24px;
+      background: #0088cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+
+    .telegram-btn:hover {
+      background: #006699;
+      transform: translateY(-2px);
+    }
+
+    .promo-block {
+      background: white;
+      max-width: 950px;
+      margin: 60px auto;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .promo-banner {
+      background: linear-gradient(135deg, #de1c80, #b45309);
+      color: white;
+      padding: 25px 35px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      font-size: clamp(20px, 4vw, 26px);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .promo-cta-btn {
+      display: inline-block;
+      padding: clamp(16px, 3vh, 22px) clamp(32px, 6vw, 50px);
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      border: 2px solid #047857;
+      border-radius: 12px;
+      font-size: clamp(18px, 3.5vw, 24px);
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: none;
+      letter-spacing: 0;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .promo-cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <a href="app.html" style="position:fixed;top:16px;right:16px;z-index:9999;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:10px 20px;border-radius:10px;font-weight:900;font-size:clamp(12px,2vw,15px);text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,0.25);white-space:nowrap;">🔑 Войти</a>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>🎓 Тренажёр умножения и деления в столбик для 4 класса</h1>
+      <p class="subtitle">Ребёнок сам находит свою ошибку — вы не сидите над каждым примером</p>
+      <p class="for-grade">Многозначные числа, деление с остатком — по программе 4 класса</p>
+      <div id="heroPriceHint" style="display: none; margin: 15px auto 0; padding: 12px 24px; border-radius: 12px; font-weight: 900; font-size: clamp(14px, 3vw, 18px); color: white; line-height: 1.4; max-width: 90%;"></div>
+
+      <div class="hero-buttons">
+        <a href="javascript:void(0)" class="btn btn-primary" onclick="openOrderModal()" style="font-size: clamp(18px, 3.5vw, 24px); padding: clamp(16px, 3vh, 22px) clamp(32px, 6vw, 50px);">Оформить доступ для обучения</a>
+        <a href="javascript:void(0)" class="btn demo-shine" onclick="startDemo()" style="font-size: clamp(18px, 3.5vw, 24px); padding: clamp(16px, 3vh, 22px) clamp(32px, 6vw, 50px); background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: 2px solid #b45309; box-shadow: 0 4px 20px rgba(245,158,11,0.5);">🎯 Попробовать бесплатно</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problems Section -->
+  <section class="problems">
+    <div class="container">
+      <h2 class="section-title">😤 Знакомые ситуации в 4 классе?</h2>
+
+      <div class="problems-grid">
+        <div class="problem-item">
+          <p>Путает порядок цифр при умножении в столбик</p>
+        </div>
+        <div class="problem-item">
+          <p>Не понимает, куда девать остаток при делении в столбик</p>
+        </div>
+        <div class="problem-item">
+          <p>Забывает переносить десяток между разрядами</p>
+        </div>
+        <div class="problem-item">
+          <p>Готовые примеры из интернета не объясняют алгоритм</p>
+        </div>
+        <div class="problem-item">
+          <p>Репетитор по 1500₽/час — не вариант каждую неделю</p>
+        </div>
+        <div class="problem-item">
+          <p>Контрольная на носу, а системного тренажёра нет</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="solution">
+    <div class="container">
+      <h2 class="section-title">✨ Один тренажёр — вся программа 4 класса по столбику</h2>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <p>Подсказка на каждом шаге разряда<br>"Умножь 7×3, напиши 1, запомни 2"</p>
+        </div>
+        <div class="feature-item">
+          <p>Нельзя решить неправильно и не заметить<br>Тренажёр сразу показывает, где ошибка</p>
+        </div>
+        <div class="feature-item">
+          <p>Отдельно умножение, отдельно деление<br>Или оба сразу — на выбор</p>
+        </div>
+        <div class="feature-item">
+          <p>Работает в браузере на любом устройстве<br>Телефон, планшет, компьютер</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modules Section -->
+  <section class="modules" id="modules">
+    <div class="container">
+      <h2 class="section-title">📚 Модули: от первых шагов до полного алгоритма</h2>
+
+      <div class="modules-grid">
+        <div class="module-card">
+          <div class="module-icon">🌱</div>
+          <h3 class="module-title">Первые шаги</h3>
+          <p class="module-desc">Умножение на одну цифру. Учим переносы разрядов и запоминание. Для тех, кто только начинает.</p>
+          <span class="module-level">✓ Для 2-3 класса</span>
+        </div>
+
+        <div class="module-card">
+          <div class="module-icon">🔢</div>
+          <h3 class="module-title">Умножение в столбик</h3>
+          <img src="multiplication_demo.gif" alt="Демо умножения в столбик" class="module-gif" loading="lazy">
+          <p class="module-desc">Многозначные числа, полный алгоритм умножения в столбик с подсказкой на каждом этапе.</p>
+          <span class="module-level">✓ Для 3-4 класса</span>
+        </div>
+
+        <div class="module-card">
+          <div class="module-icon">➗</div>
+          <h3 class="module-title">Деление в столбик</h3>
+          <img src="division_demo.gif" alt="Демо деления в столбик" class="module-gif" loading="lazy">
+          <p class="module-desc">Самая сложная тема — разобрана по шагам. Каждое действие деления в столбик объясняется отдельно.</p>
+          <span class="module-level">✓ Для 3-4 класса</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Review Section -->
+  <section style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); padding: clamp(40px, 8vh, 80px) 20px;">
+    <div class="container">
+      <h2 class="section-title">🏫 Что говорят педагоги</h2>
+      <div style="max-width: 800px; margin: 0 auto; background: white; border-radius: 20px; padding: clamp(30px, 5vw, 50px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 6px solid #10B981;">
+        <div style="font-size: clamp(36px, 6vw, 48px); color: #10B981; line-height: 1; margin-bottom: 15px;">❝</div>
+        <p style="font-size: clamp(15px, 2.5vw, 18px); color: #374151; line-height: 1.8; font-style: italic; margin-bottom: 10px;">
+          Тренажёр выстроен очень грамотно — содержание полностью соответствует требованиям ФГОС для начальной школы по темам «Умножение и деление». Особенно ценно, что тренажёр учит именно алгоритму, а не просто подбору ответа — это помогает избежать типичных ошибок с переносом разрядов.<br><br>
+          Пошаговые подсказки сформулированы так, как учитель объясняет у доски. Это создаёт эффект присутствия педагога рядом и снижает тревожность у детей, которым математика даётся тяжело.
+        </p>
+        <div style="display: flex; align-items: center; gap: 15px; margin-top: 20px;">
+          <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">🏫</div>
+          <div>
+            <div style="font-weight: 900; color: #1f2937; font-size: clamp(15px, 2.5vw, 17px);">Образовательный центр "Орион", г.Сочи</div>
+            <div style="color: #6B7280; font-size: clamp(13px, 2vw, 15px);">Педагогический состав</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+
+      <div class="promo-block" style="margin-bottom: 40px;">
+        <div class="promo-banner">
+          РЕБЁНОК ОСВОИТ ДЕЛЕНИЕ И УМНОЖЕНИЕ В СТОЛБИК ЗА 2 НЕДЕЛИ<br>
+          Без слёз, уговоров и споров с родителями
+        </div>
+
+        <div style="background: #fff7ed; border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-bottom: 25px; color: #92400e;">
+          <div style="font-size: 1.3em; font-weight: 900; margin-bottom: 5px;">🚀 СТАРТОВАЯ АКЦИЯ: Заберите лучшую цену</div>
+          <div style="font-size: 0.95em; margin-bottom: 15px;">Чем раньше оформляете доступ, тем дешевле!</div>
+          <div style="text-align: left; display: inline-block; font-size: 1.05em; line-height: 1.8;">
+            🔥 Первым 100 покупателям эксклюзив — <strong>100 ₽ / год</strong><br>
+            ⚡️ Следующим 200 покупателям — <strong>200 ₽ / год</strong><br>
+            🔒 Далее — <strong>490 ₽ / год</strong>
+          </div>
+          <div style="font-size: 0.85em; opacity: 0.85; margin-top: 12px;">💡 Зафиксируем вашу цену на 12 месяцев с момента оплаты.</div>
+          <div id="scarcityBanner" style="display: none; color: white; font-weight: 900; padding: 16px 20px; border-radius: 10px; margin-top: 15px; font-size: 1.2em; text-align: center;"></div>
+        </div>
+
+        <button class="promo-cta-btn" onclick="openOrderModal()" id="mainCtaBtn">
+          Оформить доступ за <span id="ctaPriceText">100 ₽</span> / год
+        </button>
+
+        <div class="price-compare no-pin">
+          <p>Это выгоднее, чем обычные альтернативы:</p>
+          <p>❌ 1 занятие с репетитором — от 800₽ (а их нужно хотя бы 8-10)</p>
+          <p>❌ Месяц на детской онлайн-платформе — от 1990₽</p>
+          <p>❌ Комплект печатных тетрадей-тренажёров — от 600₽</p>
+        </div>
+
+        <div class="payment-info">
+          <p>💳 Оплата картой или СБП</p>
+          <p>🔒 Безопасная передача данных</p>
+          <p>✓ Доступ открывается сразу после оплаты</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq">
+    <div class="container">
+      <h2 class="section-title">❓ Частые вопросы</h2>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">Есть ли тренажёр умножения и деления в столбик специально для 4 класса?</div>
+          <div class="faq-answer">Да, Stolbik.online — интерактивный тренажёр с модулями под программу 4 класса: умножение и деление многозначных чисел в столбик, включая деление с остатком.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Соответствует ли тренажёр школьной программе 4 класса?</div>
+          <div class="faq-answer">Да, задания построены по темам ФГОС для 4 класса: умножение и деление в столбик на однозначное и двузначное число, деление с остатком.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Чем тренажёр отличается от готовых примеров и калькуляторов?</div>
+          <div class="faq-answer">Калькулятор просто показывает готовое решение — ребёнок его перепишет и ничему не научится. Тренажёр заставляет ввести каждую цифру разряда самостоятельно и сразу подсказывает, где ошибка.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Умеет ли тренажёр делить с остатком?</div>
+          <div class="faq-answer">Да, деление с остатком — одна из тем модуля «Деление в столбик», актуальная именно для программы 4 класса.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Нужно устанавливать программу?</div>
+          <div class="faq-answer">Нет. Тренажёр работает прямо в браузере на телефоне, планшете или компьютере — ничего скачивать не нужно.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Как получить доступ после оплаты?</div>
+          <div class="faq-answer">После оплаты логин и пароль автоматически придут вам на email в течение нескольких минут. Можно сразу начинать заниматься!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <h2 class="section-title">⏰ Закрепите умножение и деление в столбик по программе 4 класса</h2>
+
+      <p class="cta-text">
+        Пока вы думаете, другие дети уже занимаются и получают пятёрки.<br>
+        Дайте вашему ребёнку инструмент, который сам находит его ошибки.
+      </p>
+
+      <button class="btn btn-primary" onclick="openOrderModal()" style="font-size: clamp(18px, 3.5vw, 24px); padding: clamp(16px, 3vh, 22px) clamp(32px, 6vw, 50px);">
+        Оформить доступ для обучения
+      </button>
+
+      <p class="cta-note">
+        P.S. Доступ действует 1 год с момента оплаты. Напомним заранее, если понадобится продлить.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>Математический тренажёр © 2025</p>
+      <p style="opacity: 0.8; font-size: 14px; margin-top: 8px;">столбиком.рф | stolbik.online</p>
+
+      <div id="requisites" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15);">
+        <p style="font-weight: 700; margin-bottom: 8px;">Реквизиты</p>
+        <p>Шарипов Тахир Жураевич, самозанятый</p>
+        <p>ИНН: 772271676689</p>
+        <p>Email: tzsharipov@gmail.com</p>
+        <p>Телефон: +7 925 090 72 41</p>
+        <p>Telegram: <a href="https://t.me/SharipovT" target="_blank">@SharipovT</a></p>
+      </div>
+
+      <div class="login-link">
+        <p><a href="app.html">Уже есть доступ? Войти в приложение →</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const NETLIFY_URL = 'https://vermillion-platypus-908cd1.netlify.app';
+
+    let currentPrice = 100;
+
+    function animateCounter(element, target) {
+      let current = 0;
+      const step = Math.max(1, Math.ceil(target / 20));
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(interval);
+        }
+        element.textContent = current;
+      }, 40);
+    }
+
+    async function updatePriceDisplay() {
+      try {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/get_price_status`);
+        const data = await response.json();
+        currentPrice = data.price;
+
+        const ctaEl = document.getElementById('ctaPriceText');
+        if (ctaEl) ctaEl.textContent = currentPrice + ' ₽';
+
+        const paymentEl = document.getElementById('paymentAmountText');
+        if (paymentEl) paymentEl.textContent = currentPrice;
+
+        let remaining = null;
+        if (data.price === 100) {
+          remaining = 100 - data.count;
+        } else if (data.price === 200) {
+          remaining = 300 - data.count;
+        }
+
+        const banner = document.getElementById('scarcityBanner');
+        if (banner) {
+          if (remaining !== null && remaining > 0 && remaining <= 100) {
+            banner.style.display = 'block';
+            banner.textContent = '🔥 ОСТАЛОСЬ ВСЕГО ' + remaining + ' ПОДПИСОК ПО ' + currentPrice + '₽!';
+          } else {
+            banner.style.display = 'none';
+          }
+        }
+
+        const heroHint = document.getElementById('heroPriceHint');
+        if (heroHint) {
+          if (remaining !== null && remaining > 0) {
+            heroHint.style.display = 'inline-block';
+            const priceLabel = (currentPrice === 100) ? 'первым покупателям' : 'текущая цена';
+            heroHint.textContent = '🚀 Стартовая акция: ' + priceLabel + ' — всего ' + currentPrice + '₽/год вместо 490₽. Осталось ' + remaining + ' мест — зафиксируйте цену на 12 месяцев!';
+          } else {
+            heroHint.style.display = 'none';
+          }
+        }
+
+        const buttonText = (remaining !== null && remaining > 0)
+          ? 'Оформить доступ для обучения за ' + currentPrice + ' руб.'
+          : 'Оформить доступ для обучения';
+
+        document.querySelectorAll('.hero-buttons .btn-primary, .cta button.btn-primary').forEach(btn => {
+          btn.textContent = buttonText;
+        });
+
+        const soldCountEl = document.getElementById('soldCount');
+        if (soldCountEl) soldCountEl.textContent = data.count;
+
+        const stickyBar = document.getElementById('stickyBar');
+        const stickyRemainingEl = document.getElementById('stickyRemaining');
+        const stickyPriceEl = document.getElementById('stickyPrice');
+        if (stickyBar) {
+          if (remaining !== null && remaining > 0) {
+            stickyBar.style.display = 'flex';
+            if (stickyRemainingEl) stickyRemainingEl.textContent = remaining;
+            if (stickyPriceEl) stickyPriceEl.textContent = currentPrice;
+          } else {
+            stickyBar.style.display = 'none';
+          }
+        }
+      } catch (e) {
+        console.error('Не удалось получить актуальную цену', e);
+      }
+    }
+    window.addEventListener('DOMContentLoaded', updatePriceDisplay);
+
+    window.openOrderModal = function() {
+      document.getElementById('orderModal').classList.add('active');
+      document.getElementById('registrationForm').style.display = 'block';
+      document.getElementById('successScreen').classList.remove('active');
+      document.getElementById('applicationForm').reset();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Отправить заявку';
+    }
+
+    window.closeOrderModal = function() {
+      document.getElementById('orderModal').classList.remove('active');
+    }
+
+    async function submitApplication(event) {
+      event.preventDefault();
+
+      if (typeof ym !== 'undefined') {
+        ym(107219867, 'reachGoal', 'order_success');
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Отправка...';
+
+      const email = document.getElementById('emailInput').value.trim();
+      const childName = document.getElementById('childNameInput').value.trim();
+      const payerName = document.getElementById('payerNameInput').value.trim();
+      const telegram = document.getElementById('telegramInput').value.trim();
+
+      try {
+        const response = await fetch(`${NETLIFY_URL}/.netlify/functions/submit_application`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email,
+            childName,
+            payerName,
+            telegram: telegram || null
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          alert('❌ ' + (result.error || 'Ошибка отправки заявки'));
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Отправить заявку';
+          return;
+        }
+
+        submitBtn.textContent = 'Переходим к оплате...';
+
+        try {
+          const paymentResponse = await fetch(`${NETLIFY_URL}/.netlify/functions/create_payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ applicationId: result.applicationId })
+          });
+
+          const paymentResult = await paymentResponse.json();
+
+          if (!paymentResponse.ok || !paymentResult.confirmationUrl) {
+            alert('❌ Не удалось создать платёж. Попробуйте ещё раз или напишите нам в Telegram: @SharipovT');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Отправить заявку';
+            return;
+          }
+
+          window.location.href = paymentResult.confirmationUrl;
+
+        } catch (err) {
+          console.error('Ошибка создания платежа:', err);
+          alert('❌ Ошибка при переходе к оплате. Попробуйте ещё раз.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Отправить заявку';
+        }
+
+      } catch (err) {
+        console.error('Error:', err);
+        alert('❌ Ошибка соединения. Попробуйте позже.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Отправить заявку';
+      }
+    }
+
+    window.copyToClipboard = function(text, button) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.textContent;
+        button.textContent = '✅ Скопировано!';
+        button.style.background = '#10B981';
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.background = '#667eea';
+        }, 2000);
+      }).catch(err => {
+        console.error('Ошибка копирования:', err);
+        alert('Не удалось скопировать. Скопируйте вручную.');
+      });
+    }
+
+    window.startDemo = function() {
+      localStorage.setItem('isDemoMode', 'true');
+      window.location.href = 'app.html';
+    }
+
+    window.openOrderForm = function() {
+      openOrderModal();
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+
+  <!-- Modal Window -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeOrderModal()">✕</button>
+
+      <div id="registrationForm">
+        <h2 class="modal-title">📝 Оформление доступа</h2>
+
+        <form id="applicationForm" onsubmit="submitApplication(event)">
+          <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" id="emailInput" required placeholder="ivanov@mail.ru">
+          </div>
+
+          <div class="form-group">
+            <label>Имя ребёнка <span class="required">*</span></label>
+            <input type="text" id="childNameInput" required placeholder="Ваня">
+          </div>
+
+          <div class="form-group">
+            <label>Ваше ФИО (как в банке) <span class="required">*</span></label>
+            <input type="text" id="payerNameInput" required placeholder="Иванов Иван Борисович">
+          </div>
+
+          <div class="form-group">
+            <label>Telegram (необязательно)</label>
+            <input type="text" id="telegramInput" placeholder="@ivan_ivanov">
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            Отправить заявку
+          </button>
+        </form>
+      </div>
+
+      <div id="successScreen" class="success-screen">
+        <h2 class="modal-title">✅ Заявка создана!</h2>
+
+        <div class="application-number">
+          📋 Ваш номер заявки:<br>
+          <span id="appNumberDisplay"></span>
+        </div>
+
+        <div class="payment-info">
+          <h3>Для активации доступа:</h3>
+
+          <p><strong>1️⃣ Переведите <span id="paymentAmountText">100</span>₽:</strong></p>
+
+          <div class="payment-method">
+            <strong>📱 СБП (по номеру телефона):</strong>
+            +7 925 090 72 41<br>
+            <small>(Тахир Жураевич Ш.)</small>
+            <button type="button" class="copy-btn" onclick="copyToClipboard('+79250907241', this)">
+              📋 Скопировать номер
+            </button>
+          </div>
+
+          <div class="payment-method">
+            <strong>💳 Карта МИР:</strong>
+            2202 2056 3073 0999<br>
+            <small>(Шарипов Тахир Жураевич)</small>
+            <button type="button" class="copy-btn" onclick="copyToClipboard('2202205630730999', this)">
+              📋 Скопировать номер
+            </button>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          ⚠️ В комментарии к платежу укажите:<br>
+          <strong id="appNumberComment"></strong>
+        </div>
+
+        <div class="contact-info">
+          <p><strong>2️⃣ После оплаты напишите:</strong></p>
+          <a href="https://t.me/SharipovT" target="_blank" class="telegram-btn">
+            💬 Написать в Telegram
+          </a>
+          <p style="margin-top: 10px; font-size: 14px; color: #6b7280;">
+            или на email: tzsharipov@gmail.com
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="stickyBar" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; padding: 22px 20px; z-index: 9998; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; background: linear-gradient(135deg, #a855f7, #7e22ce);">
+    <span style="font-weight: 900; color: white; font-size: clamp(16px, 3.5vw, 22px); text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+      🔥 Осталось <span id="stickyRemaining">100</span> мест по <span id="stickyPrice">100</span>₽! Уже куплено: <span id="soldCount">0</span>
+    </span>
+    <button onclick="openOrderModal()" style="background: white; color: #7e22ce; border: none; padding: 14px 30px; border-radius: 10px; font-weight: 900; cursor: pointer; font-size: clamp(15px, 3vw, 17px); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+      Оформить доступ →
+    </button>
+  </div>
+
+</body>
+</html>

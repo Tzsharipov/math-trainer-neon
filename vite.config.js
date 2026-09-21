@@ -14,6 +14,7 @@ export default defineConfig({
         multiplication: resolve(__dirname, 'multiplication.html'),
         division: resolve(__dirname, 'division.html'),
         landing: resolve(__dirname, 'trenazher-umnozhenie-delenie-stolbik.html'),
+        klass4: resolve(__dirname, 'trenazher-stolbik-4-klass.html'),
       },
     },
   },
