@@ -13,6 +13,7 @@ export default defineConfig({
         basics: resolve(__dirname, 'basics.html'),
         multiplication: resolve(__dirname, 'multiplication.html'),
         division: resolve(__dirname, 'division.html'),
+        landing: resolve(__dirname, 'trenazher-umnozhenie-delenie-stolbik.html'),
       },
     },
   },
