@@ -1287,11 +1287,13 @@ async function updatePriceDisplay() {
 window.addEventListener('DOMContentLoaded', updatePriceDisplay);
 
  
-    window.openOrderModal = function() {
+    window.openOrderModal = function(keepValues) {
       document.getElementById('orderModal').classList.add('active');
       document.getElementById('registrationForm').style.display = 'block';
       document.getElementById('successScreen').classList.remove('active');
-      document.getElementById('applicationForm').reset();
+      if (!keepValues) {
+        document.getElementById('applicationForm').reset();
+      }
       
       // Сброс состояния кнопки
       const submitBtn = document.getElementById('submitBtn');
@@ -1302,6 +1304,43 @@ window.addEventListener('DOMContentLoaded', updatePriceDisplay);
     window.closeOrderModal = function() {
       document.getElementById('orderModal').classList.remove('active');
     }
+
+    // Сохраняем введённые данные перед уходом на страницу политики конфиденциальности,
+    // чтобы при возврате заявка не обнулялась.
+    window.saveApplicationDraft = function() {
+      const draft = {
+        email: document.getElementById('emailInput').value,
+        childName: document.getElementById('childNameInput').value,
+        payerName: document.getElementById('payerNameInput').value,
+        telegram: document.getElementById('telegramInput').value,
+        consent: document.getElementById('consentCheckbox').checked
+      };
+      sessionStorage.setItem('applicationDraft', JSON.stringify(draft));
+    }
+
+    // При загрузке страницы: если пришли с политики конфиденциальности (#заявка в адресе)
+    // и есть сохранённый черновик — открываем модалку заново и возвращаем введённые данные.
+    window.addEventListener('DOMContentLoaded', function() {
+      if (window.location.hash === '#order') {
+        const raw = sessionStorage.getItem('applicationDraft');
+        if (raw) {
+          try {
+            const draft = JSON.parse(raw);
+            openOrderModal(true);
+            document.getElementById('emailInput').value = draft.email || '';
+            document.getElementById('childNameInput').value = draft.childName || '';
+            document.getElementById('payerNameInput').value = draft.payerName || '';
+            document.getElementById('telegramInput').value = draft.telegram || '';
+            document.getElementById('consentCheckbox').checked = !!draft.consent;
+            sessionStorage.removeItem('applicationDraft');
+          } catch (e) {
+            openOrderModal();
+          }
+        } else {
+          openOrderModal();
+        }
+      }
+    });
     
     async function submitApplication(event) {
       event.preventDefault();
@@ -1451,6 +1490,13 @@ window.addEventListener('DOMContentLoaded', updatePriceDisplay);
           <div class="form-group">
             <label>Telegram (необязательно)</label>
             <input type="text" id="telegramInput" placeholder="@ivan_ivanov">
+          </div>
+
+          <div class="form-group" style="display:flex; align-items:flex-start; gap:8px; margin-top:4px;">
+            <input type="checkbox" id="consentCheckbox" required style="width:18px; height:18px; flex-shrink:0; margin-top:3px;">
+            <label for="consentCheckbox" style="font-size:13px; font-weight:400; color:#4b5563; line-height:1.4;">
+              Я даю согласие на обработку персональных данных в соответствии с <a href="privacy.html#order" onclick="saveApplicationDraft()" style="color:#7e22ce; text-decoration:underline;">Политикой конфиденциальности</a> <span class="required">*</span>
+            </label>
           </div>
           
           <button type="submit" class="submit-btn" id="submitBtn">
