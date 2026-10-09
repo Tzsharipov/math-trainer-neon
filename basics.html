@@ -236,14 +236,15 @@
       function getTotalDemoCount() {
         return (parseInt(localStorage.getItem('demo_basics_count') || '0', 10) +
                 parseInt(localStorage.getItem('demo_multiplication_count') || '0', 10) +
-                parseInt(localStorage.getItem('demo_division_count') || '0', 10));
+                parseInt(localStorage.getItem('demo_division_count') || '0', 10) +
+                parseInt(localStorage.getItem('demo_division_basics_count') || '0', 10));
       }
 
       function showOffer() {
         try { if (typeof ym !== 'undefined') ym(METRIKA_ID, 'reachGoal', 'demo_finished'); } catch(e) {}
         const existing = document.getElementById('demoOfferModal');
         if (existing) return;
-        const allModulesDone = getTotalDemoCount() >= 15;
+        const allModulesDone = getTotalDemoCount() >= 20;
         const modal = document.createElement('div');
         modal.id = 'demoOfferModal';
         modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;';

@@ -19,6 +19,13 @@ export function generateNumber(digits) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+// Делитель нужной разрядности. Однозначный — от 2 до 9 (на 1 не делим:
+// это ничему не учит). Для 2+ цифр — прежний generateNumber без изменений.
+export function generateDivisor(digits) {
+  if (digits === 1) return Math.floor(Math.random() * 8) + 2
+  return generateNumber(digits)
+}
+
 export function hasZeroInside(num) {
   const str = String(num)
   for (let i = 0; i < str.length - 1; i++) {
@@ -57,7 +64,7 @@ export function buildExample(dividendDigits, divisorDigits, exampleType = 'norma
   const MAX_ATTEMPTS = 100
 
   for (let attempts = 0; attempts < MAX_ATTEMPTS; attempts++) {
-    const divisor = generateNumber(divisorDigits)
+    const divisor = generateDivisor(divisorDigits)
     let q
 
     if (exampleType === 'zeroInside') {

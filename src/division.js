@@ -1,5 +1,5 @@
 import './style.css';
-import { generateNumber, hasZeroInside, buildExample } from './division/divisionHelpers.js';import { buildGrid } from './division/divisionGrid.js';
+import { generateNumber, generateDivisor, hasZeroInside, buildExample } from './division/divisionHelpers.js';import { buildGrid } from './division/divisionGrid.js';
 import { checkProduct, checkDifference, checkQuotient } from './division/divisionCheck.js';
 import { updateHighlights, updateHighlightsForStep, clearHighlights } from './division/divisionHighlights.js';
 import { updateHintMessage, clearHintMessage } from './division/divisionHints.js';
@@ -29,7 +29,18 @@ function getExampleType() {
   return el ? el.value : 'normal';
 }
 
-const ALL_DIVIDEND_OPTIONS = [3, 4, 5, 6, 7];
+// Страница может ограничить разрядность делимого атрибутом на <body>
+// (раздел "Делим на однозначное число": data-dividend-max="6").
+const DIVIDEND_MAX = parseInt(document.body.dataset.dividendMax || '7', 10);
+const ALL_DIVIDEND_OPTIONS = [3, 4, 5, 6, 7].filter(v => v <= DIVIDEND_MAX);
+// Подпись пунктов списка делимого; {n} — число цифр. Страница может задать свою.
+const DIVIDEND_LABEL = document.body.dataset.dividendLabel || '{n}-значное делимое';
+
+// Допустимый делитель в ручном вводе. По умолчанию (общий модуль деления) —
+// от 10 и выше, как было всегда. Раздел "Делим на однозначное число"
+// задаёт на <body> data-divisor-min="2" data-divisor-max="9".
+const DIVISOR_MIN = parseInt(document.body.dataset.divisorMin || '10', 10);
+const DIVISOR_MAX = parseInt(document.body.dataset.divisorMax || '0', 10) || Infinity;
 
 // Прячет из списка "разрядность делимого" варианты, для которых
 // "Не забываем ноль!" физически невозможен (частное короче 3 цифр)
@@ -48,7 +59,7 @@ function updateDividendOptions() {
   allowed.forEach(v => {
     const opt = document.createElement('option');
     opt.value = v;
-    opt.textContent = `${v}-значное делимое`;
+    opt.textContent = DIVIDEND_LABEL.replace('{n}', v);
     selectDividend.appendChild(opt);
   });
 
@@ -59,11 +70,22 @@ function updateDividendOptions() {
   }
 }
 
+// Пояснение "Примеры, где в ответе нужно записать 0" показываем только
+// при выбранном "Не забываем ноль!"
+function updateZeroCaption() {
+  const caption = document.querySelector('#zeroCaption');
+  if (caption) caption.style.display = getExampleType() === 'zeroInside' ? 'block' : 'none';
+}
+
 document.querySelectorAll('input[name="exampleType"]').forEach(radio => {
-  radio.onchange = updateDividendOptions;
+  radio.onchange = () => {
+    updateDividendOptions();
+    updateZeroCaption();
+  };
 });
 selectDivisor.onchange = updateDividendOptions;
 updateDividendOptions();
+updateZeroCaption();
 
 const zeroBanner = document.querySelector('#zeroBanner');
 const zeroBannerBarValue = document.querySelector('#zeroBannerBarValue');
@@ -189,8 +211,11 @@ btnGen.onclick = () => {
     const num1 = parseInt(inDividend.value);
     const num2 = parseInt(inDivisor.value);
     
-    if (!num1 || !num2 || num1 < 100 || num2 < 10) {
-      alert('Введите корректные числа (делимое минимум 3-значное, делитель минимум 2-значное)');
+    if (!num1 || !num2 || num1 < 100 || num2 < DIVISOR_MIN || num2 > DIVISOR_MAX) {
+      const divisorRule = DIVISOR_MAX === Infinity
+        ? `делитель минимум ${DIVISOR_MIN}`
+        : `делитель от ${DIVISOR_MIN} до ${DIVISOR_MAX}`;
+      alert(`Введите корректные числа (делимое минимум 3-значное, ${divisorRule})`);
       return;
     }
     if (num1 <= num2) {
@@ -249,7 +274,7 @@ btnNewExample.onclick = () => {
       while (!validExample && attempts < 100) {
         attempts++;
         
-        divisor = generateNumber(divisorDigits);
+        divisor = generateDivisor(divisorDigits);
         const quotientDigitsCount = dividendDigits - divisorDigits + 1;
         const q = generateNumber(quotientDigitsCount);
         dividend = q * divisor;
@@ -262,7 +287,7 @@ btnNewExample.onclick = () => {
       }
       
       if (!validExample) {
-        divisor = generateNumber(divisorDigits);
+        divisor = generateDivisor(divisorDigits);
         const quotientDigitsCount = dividendDigits - divisorDigits + 1;
         const q = generateNumber(quotientDigitsCount);
         dividend = q * divisor;
@@ -553,6 +578,9 @@ function computeDifferenceEntryTarget(step) {
   } else {
     const next = stepsData[step + 1];
     const carryCol = next.offset + String(next.partialDividend).length - 1;
+    // Остаток 0 (бывает только при однозначном делителе, напр. 856 : 4,
+    // 8 − 8 = 0): по учебнику ноль не пишут — курсор сразу на снесённую цифру.
+    if (stepData.remainder === 0) return carryCol;
     return carryCol - 1;
   }
 }
@@ -708,10 +736,11 @@ function handleDifferenceInputNormal(step) {
 
   // Двухфазный ввод: сначала цифры самого остатка (справа налево, в их
   // собственных колонках), потом отдельно — снесённая цифра, на одну
-  // колонку правее. Остаток здесь никогда не равен 0 (делитель всегда
-  // 2+-значный, а однозначная снесённая цифра сама по себе не может дать
-  // число ≥ делителя) — эта ветка вообще не пересекается с чекпоинт-веткой.
-  const diffOnlyLen = String(stepData.remainder).length;
+  // колонку правее. При двузначном и большем делителе остаток здесь
+  // никогда не равен 0. При ОДНОЗНАЧНОМ делителе остаток 0 возможен
+  // (856 : 4: 8 − 8 = 0, сносим 5). По учебнику (Моро, 3 кл.) этот 0 не
+  // пишут — фаза 1 пропускается (ширина 0), курсор сразу на снесённую цифру.
+  const diffOnlyLen = stepData.remainder === 0 ? 0 : String(stepData.remainder).length;
   const carryCol = nextStep.offset + String(nextStep.partialDividend).length - 1;
   const phase1Offset = carryCol - diffOnlyLen;
 
