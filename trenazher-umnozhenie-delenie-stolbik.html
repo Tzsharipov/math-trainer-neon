@@ -1097,6 +1097,8 @@
       document.getElementById('registrationForm').style.display = 'block';
       document.getElementById('successScreen').classList.remove('active');
       document.getElementById('applicationForm').reset();
+      // Цель Метрики «открыл форму заявки»
+      try { if (typeof ym !== 'undefined') ym(107219867, 'reachGoal', 'order_open'); } catch (e) {}
 
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = false;
@@ -1198,7 +1200,15 @@
 
     window.startDemo = function() {
       localStorage.setItem('isDemoMode', 'true');
-      window.location.href = 'app.html';
+      // Цель Метрики «начал демо». Переход на app.html — только после того,
+      // как Метрика отправила событие (иначе уход со страницы его обрывает).
+      // Если Метрика заблокирована или молчит — переходим через 400 мс.
+      var gone = false;
+      function go() { if (!gone) { gone = true; window.location.href = 'app.html'; } }
+      try {
+        if (typeof ym !== 'undefined') ym(107219867, 'reachGoal', 'demo_start', {}, go);
+      } catch (e) {}
+      setTimeout(go, 400);
     }
 
     window.openOrderForm = function() {
