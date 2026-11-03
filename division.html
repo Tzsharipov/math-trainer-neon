@@ -99,12 +99,25 @@
       Делимое: 3-7 | Делитель: 2-4
     </div>
     
-    <!-- Чекбокс подсказок -->
+    <!-- Режим подсказок: с ответами / только подсветка / без подсказок -->
     <div class="mb-4">
-      <label class="flex items-center gap-3 p-3 rounded-2xl bg-yellow-400 text-slate-800 cursor-pointer hover:bg-yellow-300 transition-all shadow-md">
-        <input type="checkbox" id="checkHints" class="w-5 h-5 accent-blue-600">
-        <span class="font-black text-xs uppercase">Включить подсказки</span>
-      </label>
+      <span class="text-xs font-black uppercase text-blue-800 px-1 block mb-2">Подсказки</span>
+      <div class="flex flex-col gap-2">
+        <label class="flex items-center gap-3 p-3 rounded-2xl bg-yellow-400 text-slate-800 cursor-pointer hover:bg-yellow-300 transition-all shadow-md">
+          <input type="radio" name="hintMode" value="full" class="w-5 h-5 accent-blue-600">
+          <span class="font-black text-xs uppercase">С ответами</span>
+        </label>
+        <label class="flex items-center gap-3 p-3 rounded-2xl bg-yellow-400 text-slate-800 cursor-pointer hover:bg-yellow-300 transition-all shadow-md">
+          <input type="radio" name="hintMode" value="highlight" class="w-5 h-5 accent-blue-600">
+          <span class="font-black text-xs uppercase">Только подсветка, без ответов</span>
+        </label>
+        <label class="flex items-center gap-3 p-3 rounded-2xl bg-yellow-400 text-slate-800 cursor-pointer hover:bg-yellow-300 transition-all shadow-md">
+          <input type="radio" name="hintMode" value="none" class="w-5 h-5 accent-blue-600" checked>
+          <span class="font-black text-xs uppercase">Без подсказок</span>
+        </label>
+      </div>
+      <!-- Служебный флажок: включён в режимах «С ответами» и «Только подсветка» -->
+      <input type="checkbox" id="checkHints" class="hidden">
     </div>
 
     <!-- Что тренируем — две кнопки в один ряд, всегда видимы (не внутри ui-auto/ui-manual) -->
@@ -315,9 +328,13 @@
 
       // Ждём пока JS модуля назначит обработчики
       window.addEventListener('load', function() {
-        // В демо-режиме включаем подсказки автоматически
-        const checkHints = document.getElementById('checkHints');
-        if (checkHints) checkHints.checked = true;
+        // В демо-режиме включаем подсказки с ответами автоматически
+        if (window.setHintMode) {
+          window.setHintMode('full', false);
+        } else {
+          const checkHints = document.getElementById('checkHints');
+          if (checkHints) checkHints.checked = true;
+        }
 
         // Если лимит уже достигнут — сразу блокируем модуль
         if (getCount() >= DEMO_LIMIT) {

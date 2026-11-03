@@ -3,6 +3,11 @@
 import { updateCarryForMultiply, updateCarryForSum } from './multiplicationCarries.js';
 import { checkResult } from './multiplicationCheck.js';
 
+// Режим «Только подсветка, без ответов» (выбирается в настройках, см. multiplication.js)
+function isHighlightOnly() {
+  return window.hintMode === 'highlight';
+}
+
 // Обновляет подсказку и подсвечивает нужные ячейки для текущего неполного произведения
 // Обновляет подсказку и подсвечивает нужные ячейки - СКОПИРОВАНО ИЗ BASICS
 function updateHintAndHighlight(idx, currentRowNum, valA, valB, hintText, mathGrid) {
@@ -147,7 +152,9 @@ function showSideHintAutomatic(idx, currentRowNum, valA, valB, carries, sideHint
     const prevCarry = carries[col] || 0;
     
     if (prevCarry > 0) {
-      sideHintText.innerHTML = `Запиши ${prevCarry}<br>${prevCarry} пишем`;
+      sideHintText.innerHTML = isHighlightOnly()
+        ? `Запиши то, что было в уме`
+        : `Запиши ${prevCarry}<br>${prevCarry} пишем`;
       sideHint.style.visibility = 'visible';
       
     } else {
@@ -171,9 +178,14 @@ function showSideHintAutomatic(idx, currentRowNum, valA, valB, carries, sideHint
   if (prevCarry > 0) {
     hintTextContent += ` + ${prevCarry}`;
   }
-  hintTextContent += ` = ${product}<br>${writtenDigit} пишем`;
-  if (currentCarry > 0) {
-    hintTextContent += `, ${currentCarry} в уме`;
+  if (isHighlightOnly()) {
+    // Режим «Только подсветка» — задание без ответа, считает ребёнок сам
+    hintTextContent += ` = ?`;
+  } else {
+    hintTextContent += ` = ${product}<br>${writtenDigit} пишем`;
+    if (currentCarry > 0) {
+      hintTextContent += `, ${currentCarry} в уме`;
+    }
   }
   
   sideHintText.innerHTML = hintTextContent;
@@ -298,7 +310,9 @@ function showSideHintForSum(idx, valB, carries, sideHint, sideHintText, mathGrid
   // ПЕРВАЯ ЯЧЕЙКА (самая правая) - просто показываем цифру
   if (idx === resultInputs.length - 1 && cellsToAdd.length === 1) {
     const digit = cellsToAdd[0];
-    sideHintText.innerHTML = `Запиши цифру ${digit} в результат`;
+    sideHintText.innerHTML = isHighlightOnly()
+      ? `Перенеси эту цифру в результат`
+      : `Запиши цифру ${digit} в результат`;
     
     sideHint.style.visibility = 'visible';
     
@@ -314,9 +328,14 @@ function showSideHintForSum(idx, valB, carries, sideHint, sideHintText, mathGrid
     if (prevCarry > 0) {
       hintTextContent += ` + ${prevCarry}`;
     }
-    hintTextContent += ` = ${sum}<br>${writtenDigit} пишем`;
-    if (currentCarry > 0) {
-      hintTextContent += `, ${currentCarry} в уме`;
+    if (isHighlightOnly()) {
+      // Режим «Только подсветка» — задание без ответа
+      hintTextContent += ` = ?`;
+    } else {
+      hintTextContent += ` = ${sum}<br>${writtenDigit} пишем`;
+      if (currentCarry > 0) {
+        hintTextContent += `, ${currentCarry} в уме`;
+      }
     }
     
     sideHintText.innerHTML = hintTextContent;
@@ -667,6 +686,68 @@ export function setupLogic(totalCols, currentA, currentB, checkHints, checkMessa
         // Обычная логика для ВСЕХ строк
         updateHintAndHighlight(idx, parseInt(row), currentA, currentB, hintText, mathGrid);
         scheduleSideHint(idx, parseInt(row), currentA, currentB, carries, sideHint, sideHintText, mathGrid, totalCols);
+      }
+    };
+  });
+
+  setupManualCarries(checkHints, mathGrid);
+}
+
+// ============ ЦИФРЫ В УМЕ В РЕЖИМЕ «БЕЗ ПОДСКАЗОК» ============
+// В режимах с подсказками тренажёр сам вписывает цифры в уме (клетки только для чтения).
+// В режиме «Без подсказок» ребёнок может записать их сам, как в тетради:
+// — клетки «в уме» становятся доступными для ввода;
+// — правильность НЕ проверяется (это черновик);
+// — после ввода курсор возвращается в клетку, где ребёнок решал.
+// Очищаются клетки так же, как раньше, — по окончании каждой строки.
+function setupManualCarries(checkHints, mathGrid) {
+  const manual = !checkHints.checked;
+  const carryInputs = mathGrid.querySelectorAll('[data-carry]');
+
+  // Запоминаем последнюю клетку решения, где был курсор
+  let lastWorkInput = null;
+  mathGrid.querySelectorAll('.math-input').forEach(inp => {
+    inp.addEventListener('focus', () => { lastWorkInput = inp; });
+
+    // Стрелка ↑ — в клетку «в уме» над тем же столбцом (только в режиме «Без подсказок»)
+    inp.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowUp' || checkHints.checked) return;
+      const carry = mathGrid.querySelector(`[data-carry="${inp.dataset.col}"]`);
+      if (carry) {
+        e.preventDefault();
+        carry.focus();
+      }
+    });
+  });
+
+  carryInputs.forEach(carry => {
+    if (!manual) {
+      carry.readOnly = true;
+      return;
+    }
+
+    carry.readOnly = false;
+    carry.setAttribute('inputmode', 'numeric');
+    carry.setAttribute('autocomplete', 'off');
+    carry.classList.remove('bg-gray-200');
+    carry.classList.add('bg-white', 'border', 'border-dashed', 'border-gray-400', 'cursor-pointer');
+
+    // При нажатии на клетку выделяем старую цифру — новая сразу её заменит
+    carry.onfocus = () => carry.select();
+
+    // Стрелка ↓ — обратно в клетку решения, ничего не записывая
+    carry.onkeydown = (e) => {
+      if (e.key === 'ArrowDown' && lastWorkInput && !lastWorkInput.disabled) {
+        e.preventDefault();
+        lastWorkInput.focus();
+      }
+    };
+
+    carry.oninput = () => {
+      // Оставляем только одну цифру
+      carry.value = carry.value.replace(/[^0-9]/g, '').slice(-1);
+      if (carry.value && lastWorkInput && !lastWorkInput.disabled) {
+        lastWorkInput.focus();
       }
     };
   });

@@ -21,6 +21,9 @@ export function updateHintMessage(focusedRow, stepsData, dividend, divisor, hint
     return;
   }
   
+  // Режим «Только подсветка, без ответов» — показываем задание, но не результат
+  const hideAnswers = window.hintMode === 'highlight';
+
   let text = '';
   let useHTML = false;
   
@@ -32,8 +35,12 @@ export function updateHintMessage(focusedRow, stepsData, dividend, divisor, hint
       // Реальная (ненулевая) цифра частного — как было, без изменений.
       const partialDividend = stepData.partialDividend;
       const answer = stepData.quotientDigit;
-      text = `Введи цифру частного: ${partialDividend} ÷ ${divisor} = <span class="cell-pulse-yellow" style="display:inline-block;padding:1px 6px;border-radius:6px;background:#fde047;color:#c6654af2;">${answer}</span>`;
-      useHTML = true;
+      if (hideAnswers) {
+        text = `Подбери цифру частного: ${partialDividend} ÷ ${divisor}`;
+      } else {
+        text = `Введи цифру частного: ${partialDividend} ÷ ${divisor} = <span class="cell-pulse-yellow" style="display:inline-block;padding:1px 6px;border-radius:6px;background:#fde047;color:#c6654af2;">${answer}</span>`;
+        useHTML = true;
+      }
     } else {
       // Это может быть либо самая первая цифра, либо чекпоинт нуля —
       // полностью раздельная проверка, без пересечения с веткой выше.
@@ -47,7 +54,9 @@ export function updateHintMessage(focusedRow, stepsData, dividend, divisor, hint
         for (let c = info.step.position; c < info.step.position + checkpointNum; c++) {
           accVal = accVal * 10 + parseInt(digitsStr[c], 10);
         }
-        text = `Так как ${accVal} меньше ${divisor}, запиши 0 в частное`;
+        text = hideAnswers
+          ? `Сравни ${accVal} с делителем ${divisor}`
+          : `Так как ${accVal} меньше ${divisor}, запиши 0 в частное`;
       } else {
         text = `Введи первую цифру частного`;
       }
@@ -64,7 +73,9 @@ export function updateHintMessage(focusedRow, stepsData, dividend, divisor, hint
     if (focusedRow.type === 'product') {
       const quotientDigit = stepData.quotientDigit;
       const product = stepData.product;
-      text = `Умножь ${quotientDigit} × ${divisor} = ${product}`;
+      text = hideAnswers
+        ? `Умножь ${quotientDigit} × ${divisor}`
+        : `Умножь ${quotientDigit} × ${divisor} = ${product}`;
     } else if (focusedRow.type === 'difference') {
       const isCheckpointStep = stepData.zeroCheckpoints && stepData.zeroCheckpoints.length > 0;
 
@@ -80,11 +91,15 @@ export function updateHintMessage(focusedRow, stepsData, dividend, divisor, hint
         const remainder = stepData.remainder;
 
         if (stepIndex === stepsData.length - 1) {
-          text = `Вычти ${partialDividend} − ${product} = ${remainder}`;
+          text = hideAnswers
+            ? `Вычти ${partialDividend} − ${product}`
+            : `Вычти ${partialDividend} − ${product} = ${remainder}`;
         } else {
           const nextStepData = stepsData[stepIndex + 1];
           const nextPartial = nextStepData ? nextStepData.partialDividend : remainder;
-          text = `Вычти ${partialDividend} − ${product}, сноси цифру = ${nextPartial}`;
+          text = hideAnswers
+            ? `Вычти ${partialDividend} − ${product} и снеси следующую цифру`
+            : `Вычти ${partialDividend} − ${product}, сноси цифру = ${nextPartial}`;
         }
       }
     }

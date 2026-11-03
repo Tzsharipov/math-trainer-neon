@@ -364,6 +364,43 @@ checkHints.onchange = () => {
   }
 };
 
+// ============ РЕЖИМ ПОДСКАЗОК ============
+// 'full'      — подсветка + подсказка с ответом ("47 ÷ 6 = 7")
+// 'highlight' — подсветка + задание без ответа ("47 ÷ 6")
+// 'none'      — без подсказок
+// Подсветка включается служебным флажком checkHints (он включён в 'full' и 'highlight'),
+// а прятать ли ответ — решает window.hintMode (читается в divisionHints.js).
+const HINT_MODE_KEY = 'hintMode_division';
+const HINT_MODES = ['full', 'highlight', 'none'];
+
+function setHintMode(mode, remember = true) {
+  if (!HINT_MODES.includes(mode)) mode = 'none';
+  window.hintMode = mode;
+
+  const radio = document.querySelector(`input[name="hintMode"][value="${mode}"]`);
+  if (radio) radio.checked = true;
+
+  const enabled = mode !== 'none';
+  if (checkHints.checked !== enabled) {
+    checkHints.checked = enabled;
+    checkHints.onchange();
+  }
+
+  if (remember) {
+    try { localStorage.setItem(HINT_MODE_KEY, mode); } catch (e) {}
+  }
+}
+window.setHintMode = setHintMode;
+
+document.querySelectorAll('input[name="hintMode"]').forEach(radio => {
+  radio.onchange = (e) => setHintMode(e.target.value);
+});
+
+// Восстанавливаем последний выбранный режим (по умолчанию — без подсказок, как было)
+let savedHintMode = null;
+try { savedHintMode = localStorage.getItem(HINT_MODE_KEY); } catch (e) {}
+setHintMode(savedHintMode || 'none', false);
+
 function buildGridWrapper() {
   shownZeroBanners.clear();
   buildGrid(dividend, divisor, settingsPanel, workspace, mathGrid, checkMessage, steps, stepsData, inputRefs, focusedRow, quotientInputs, setupLogic);

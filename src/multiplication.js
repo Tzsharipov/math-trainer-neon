@@ -169,4 +169,41 @@ checkHints.onchange = () => {
   }
 };
 
+// ============ РЕЖИМ ПОДСКАЗОК ============
+// 'full'      — подсветка + готовый ответ сбоку ("7×8 + 3 = 59, 9 пишем...")
+// 'highlight' — подсветка + только задание без ответа ("7 × 8 + 3 = ?")
+// 'none'      — без подсказок
+// Подсветка включается служебным флажком checkHints (он включён в 'full' и 'highlight'),
+// а прятать ли ответ — решает window.hintMode (читается в multiplicationGrid.js).
+const HINT_MODE_KEY = 'hintMode_multiplication';
+const HINT_MODES = ['full', 'highlight', 'none'];
+
+function setHintMode(mode, remember = true) {
+  if (!HINT_MODES.includes(mode)) mode = 'full';
+  window.hintMode = mode;
+
+  const radio = document.querySelector(`input[name="hintMode"][value="${mode}"]`);
+  if (radio) radio.checked = true;
+
+  const enabled = mode !== 'none';
+  if (checkHints.checked !== enabled) {
+    checkHints.checked = enabled;
+    checkHints.onchange();
+  }
+
+  if (remember) {
+    try { localStorage.setItem(HINT_MODE_KEY, mode); } catch (e) {}
+  }
+}
+window.setHintMode = setHintMode;
+
+document.querySelectorAll('input[name="hintMode"]').forEach(radio => {
+  radio.onchange = (e) => setHintMode(e.target.value);
+});
+
+// Восстанавливаем последний выбранный режим (по умолчанию — с ответами)
+let savedHintMode = null;
+try { savedHintMode = localStorage.getItem(HINT_MODE_KEY); } catch (e) {}
+setHintMode(savedHintMode || 'full', false);
+
 document.body.classList.add('loaded');
