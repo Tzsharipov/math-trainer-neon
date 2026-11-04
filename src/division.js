@@ -32,7 +32,10 @@ function getExampleType() {
 // Страница может ограничить разрядность делимого атрибутом на <body>
 // (раздел "Делим на однозначное число": data-dividend-max="6").
 const DIVIDEND_MAX = parseInt(document.body.dataset.dividendMax || '7', 10);
-const ALL_DIVIDEND_OPTIONS = [3, 4, 5, 6, 7].filter(v => v <= DIVIDEND_MAX);
+// Минимальная разрядность делимого. По умолчанию (общий модуль деления) — 3, как было.
+// Раздел "Делим на однозначное число" задаёт data-dividend-min="2" (например, 96 : 4).
+const DIVIDEND_MIN = parseInt(document.body.dataset.dividendMin || '3', 10);
+const ALL_DIVIDEND_OPTIONS = [2, 3, 4, 5, 6, 7].filter(v => v >= DIVIDEND_MIN && v <= DIVIDEND_MAX);
 // Подпись пунктов списка делимого; {n} — число цифр. Страница может задать свою.
 const DIVIDEND_LABEL = document.body.dataset.dividendLabel || '{n}-значное делимое';
 
@@ -211,11 +214,11 @@ btnGen.onclick = () => {
     const num1 = parseInt(inDividend.value);
     const num2 = parseInt(inDivisor.value);
     
-    if (!num1 || !num2 || num1 < 100 || num2 < DIVISOR_MIN || num2 > DIVISOR_MAX) {
+    if (!num1 || !num2 || num1 < Math.pow(10, DIVIDEND_MIN - 1) || num2 < DIVISOR_MIN || num2 > DIVISOR_MAX) {
       const divisorRule = DIVISOR_MAX === Infinity
         ? `делитель минимум ${DIVISOR_MIN}`
         : `делитель от ${DIVISOR_MIN} до ${DIVISOR_MAX}`;
-      alert(`Введите корректные числа (делимое минимум 3-значное, ${divisorRule})`);
+      alert(`Введите корректные числа (делимое минимум ${DIVIDEND_MIN}-значное, ${divisorRule})`);
       return;
     }
     if (num1 <= num2) {
@@ -392,14 +395,23 @@ function setHintMode(mode, remember = true) {
 }
 window.setHintMode = setHintMode;
 
-document.querySelectorAll('input[name="hintMode"]').forEach(radio => {
-  radio.onchange = (e) => setHintMode(e.target.value);
-});
+const hintModeRadios = document.querySelectorAll('input[name="hintMode"]');
 
-// Восстанавливаем последний выбранный режим (по умолчанию — без подсказок, как было)
-let savedHintMode = null;
-try { savedHintMode = localStorage.getItem(HINT_MODE_KEY); } catch (e) {}
-setHintMode(savedHintMode || 'none', false);
+if (hintModeRadios.length > 0) {
+  // Полный модуль деления: есть выбор из трёх опций подсказок
+  hintModeRadios.forEach(radio => {
+    radio.onchange = (e) => setHintMode(e.target.value);
+  });
+
+  // Восстанавливаем последний выбранный режим (по умолчанию — без подсказок, как было)
+  let savedHintMode = null;
+  try { savedHintMode = localStorage.getItem(HINT_MODE_KEY); } catch (e) {}
+  setHintMode(savedHintMode || 'none', false);
+} else {
+  // Страница без выбора (раздел "Делим на однозначное число"): подсказки
+  // задаются самой страницей через скрытый флажок checkHints — НЕ трогаем его.
+  window.hintMode = checkHints.checked ? 'full' : 'none';
+}
 
 function buildGridWrapper() {
   shownZeroBanners.clear();
