@@ -16,6 +16,7 @@ export default defineConfig({
         divisionBasics: resolve(__dirname, 'division-basics.html'),
         landing: resolve(__dirname, 'trenazher-umnozhenie-delenie-stolbik.html'),
         klass4: resolve(__dirname, 'trenazher-stolbik-4-klass.html'),
+        delenieOdnoznachnoe: resolve(__dirname, 'delenie-stolbikom-na-odnoznachnoe-chislo.html'),
         privacy: resolve(__dirname, 'privacy.html'),
       },
     },

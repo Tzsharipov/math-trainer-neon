@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="metrika.js"></script>
+  <link rel="canonical" href="https://stolbik.online/delenie-stolbikom-na-odnoznachnoe-chislo.html" />
+  <meta name="description" content="Деление столбиком на однозначное число: алгоритм по шагам, разобранные примеры (в том числе с нулём в частном), примеры для тренировки с ответами и бесплатный онлайн-тренажёр с подсказками." />
+  <title>Деление столбиком на однозначное число — объяснение, примеры и тренажёр</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "HowTo", "name": "Как делить столбиком на однозначное число", "step": [{"@type": "HowToStep", "name": "Запишите деление уголком", "text": "Слева делимое, справа за вертикальной чертой делитель, под делителем горизонтальная черта для частного."}, {"@type": "HowToStep", "name": "Найдите первое неполное делимое", "text": "Возьмите первую цифру делимого. Если она меньше делителя, возьмите две первые цифры."}, {"@type": "HowToStep", "name": "Подберите цифру частного", "text": "Узнайте, сколько раз делитель помещается в неполное делимое, и запишите эту цифру в частное."}, {"@type": "HowToStep", "name": "Умножьте и вычтите", "text": "Умножьте цифру частного на делитель, запишите результат под неполным делимым и вычтите. Остаток должен быть меньше делителя."}, {"@type": "HowToStep", "name": "Снесите следующую цифру", "text": "Припишите к остатку следующую цифру делимого — получится новое неполное делимое. Если оно меньше делителя, запишите в частное 0 и снесите ещё одну цифру."}, {"@type": "HowToStep", "name": "Проверьте умножением", "text": "Когда цифры делимого закончились и остаток равен нулю, умножьте частное на делитель: должно получиться делимое."}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Как объяснить ребёнку деление столбиком на однозначное число?", "acceptedAnswer": {"@type": "Answer", "text": "Разбейте деление на повторяющийся цикл из четырёх действий: найти неполное делимое, подобрать цифру частного, умножить её на делитель и вычесть, снести следующую цифру. Повторять цикл, пока не закончатся цифры делимого. Удобнее всего отрабатывать это на тренажёре, который подсказывает, какое действие сейчас нужно сделать."}}, {"@type": "Question", "name": "В каком классе проходят деление столбиком на однозначное число?", "acceptedAnswer": {"@type": "Answer", "text": "Деление многозначного числа на однозначное в столбик проходят в 3 классе, в 4 классе его закрепляют и переходят к делению на двузначное и трёхзначное число."}}, {"@type": "Question", "name": "Что делать, если цифра делимого меньше делителя?", "acceptedAnswer": {"@type": "Answer", "text": "Если первая цифра делимого меньше делителя, берут две первые цифры — это первое неполное делимое. Если же меньше делителя оказалось число после сноса цифры в середине деления, в частное записывают 0 и сносят следующую цифру."}}, {"@type": "Question", "name": "Почему в ответе пропадает ноль?", "acceptedAnswer": {"@type": "Answer", "text": "Это самая частая ошибка: после сноса цифры число оказывается меньше делителя, ребёнок сносит следующую цифру и забывает записать 0 в частное. Например, 612 : 3 получается 24 вместо 204. Проверка умножением сразу показывает ошибку: 24 × 3 = 72, а не 612."}}, {"@type": "Question", "name": "Можно ли потренироваться бесплатно?", "acceptedAnswer": {"@type": "Answer", "text": "Да. В тренажёре Stolbik есть бесплатный демо-режим без регистрации: в модуле «Деление, старт» можно решить 5 примеров на деление на однозначное число с подсказками на каждом шаге."}}]}</script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial,-apple-system,'Segoe UI',sans-serif;line-height:1.65;color:#1f2937;background:#f9fafb}
+    .wrap{max-width:860px;margin:0 auto;padding:0 clamp(14px,4vw,24px)}
+    .hero{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:clamp(48px,9vh,90px) 0 clamp(36px,6vh,60px);text-align:center}
+    .hero h1{font-size:clamp(24px,5.5vw,40px);line-height:1.25;margin-bottom:14px}
+    .hero p{font-size:clamp(15px,2.8vw,19px);opacity:.95}
+    .btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:24px}
+    .btn{display:inline-block;padding:clamp(12px,2vh,16px) clamp(22px,4vw,34px);border-radius:12px;font-weight:800;font-size:clamp(15px,2.8vw,18px);text-decoration:none;cursor:pointer;border:none}
+    .btn-demo{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+    .btn-buy{background:linear-gradient(135deg,#10B981,#059669);color:#fff}
+    .note{font-size:clamp(13px,2.4vw,15px);margin-top:12px;opacity:.9}
+    section{padding:clamp(30px,6vh,56px) 0}
+    section:nth-of-type(even){background:#fff}
+    h2{font-size:clamp(21px,4.4vw,30px);margin-bottom:16px;color:#312e81}
+    h3{font-size:clamp(16px,3vw,19px);margin:14px 0 6px}
+    p,li{font-size:clamp(15px,2.6vw,17px)}
+    ol,ul{padding-left:22px} li{margin:6px 0}
+    .cols{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px}
+    .col{background:#eef2ff;border-radius:14px;padding:16px 20px;flex:1 1 220px}
+    .col pre{font-family:'Courier New',Consolas,monospace;font-size:clamp(17px,3.2vw,21px);line-height:1.25;color:#1e1b4b}
+    figcaption{font-size:14px;color:#4b5563;margin-top:10px}
+    .warn{background:#fef2f2;border-left:4px solid #ef4444;padding:14px 18px;border-radius:0 10px 10px 0;margin:12px 0}
+    .practice{columns:2;column-gap:40px;font-family:'Courier New',Consolas,monospace;list-style:none;padding:0}
+    .practice li{font-size:clamp(17px,3vw,20px)}
+    details{margin-top:16px;background:#f3f4f6;border-radius:10px;padding:12px 16px}
+    summary{cursor:pointer;font-weight:700}
+    .cta{background:linear-gradient(135deg,#10B981,#059669);color:#fff;text-align:center}
+    .cta h2{color:#fff}
+    .faq{border-left:4px solid #667eea;background:#f9fafb;padding:12px 18px;border-radius:0 10px 10px 0;margin-bottom:12px}
+    footer{background:#1f2937;color:#d1d5db;padding:26px 0;text-align:center;font-size:14px}
+    footer a{color:#34d399;text-decoration:none}
+    .login{position:fixed;top:14px;right:14px;z-index:99;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:9px 18px;border-radius:10px;font-weight:800;font-size:clamp(12px,2vw,15px);text-decoration:none}
+  </style>
+</head>
+<body>
+  <a href="app.html" class="login">🔑 Войти</a>
+  <header class="hero"><div class="wrap">
+    <h1>Деление столбиком на однозначное число</h1>
+    <p>Алгоритм по шагам, разобранные примеры, задания с ответами и онлайн-тренажёр, который подсказывает ребёнку каждый шаг</p>
+    <div class="btns">
+      <a href="javascript:void(0)" class="btn btn-demo" onclick="startDemo()">🎯 Решить примеры в тренажёре бесплатно</a>
+    </div>
+    <p class="note">Бесплатно, без регистрации: 5 примеров на деление с подсказками</p>
+  </div></header>
+
+  <section><div class="wrap">
+    <h2>Алгоритм деления столбиком на однозначное число</h2>
+    <p>Деление столбиком — это один и тот же цикл действий, который повторяется, пока не закончатся цифры делимого. Если ребёнок запомнит цикл, он разделит любое число.</p>
+    <ol>
+      <li><b>Запиши деление уголком.</b> Слева делимое, справа за чертой делитель, под делителем — черта для ответа.</li>
+      <li><b>Найди первое неполное делимое.</b> Возьми первую цифру делимого. Если она меньше делителя — возьми две первые цифры.</li>
+      <li><b>Подбери цифру частного.</b> Сколько раз делитель помещается в неполное делимое? Запиши эту цифру в ответ.</li>
+      <li><b>Умножь и вычти.</b> Умножь цифру частного на делитель, запиши под неполным делимым и вычти. Остаток обязательно должен быть меньше делителя.</li>
+      <li><b>Снеси следующую цифру</b> делимого к остатку — получится новое неполное делимое. Дальше снова шаги 3–5.</li>
+      <li><b>Проверь умножением:</b> частное × делитель = делимое.</li>
+    </ol>
+  </div></section>
+
+  <section><div class="wrap">
+    <h2>Разберём на примерах</h2>
+    <div class="cols"><figure class="col"><pre> 936 │4
+−8   ├───
+ ─   │234
+ 13
+−12
+ ──
+  16
+ −16
+  ──
+   0</pre><figcaption>936 : 4 = 234</figcaption></figure><figure class="col"><pre> 612 │3
+−6   ├───
+ ─   │204
+  12
+ −12
+  ──
+   0</pre><figcaption>612 : 3 = 204 — ноль в частном</figcaption></figure><figure class="col"><pre> 255 │5
+−25  ├──
+ ──  │51
+   5
+  −5
+   ─
+   0</pre><figcaption>255 : 5 = 51 — первая цифра меньше делителя</figcaption></figure></div>
+    <h3>Пример 1: 936 : 4</h3>
+    <p>9 : 4 — помещается 2 раза, пишем 2 в частное. 2 × 4 = 8, 9 − 8 = 1. Сносим 3 — получилось 13. 13 : 4 = 3, 3 × 4 = 12, 13 − 12 = 1. Сносим 6 — получилось 16. 16 : 4 = 4, остаток 0. Ответ: 234. Проверка: 234 × 4 = 936.</p>
+    <h3>Пример 2: 612 : 3 — ноль в частном</h3>
+    <p>6 : 3 = 2, остаток 0. Сносим 1 — получилась единица, а 1 меньше 3, разделить нельзя. <b>Пишем в частное 0</b> и сносим следующую цифру — 12. 12 : 3 = 4. Ответ: 204, а не 24.</p>
+    <h3>Пример 3: 255 : 5 — первая цифра меньше делителя</h3>
+    <p>2 меньше 5, поэтому первое неполное делимое — 25. 25 : 5 = 5, остаток 0. Сносим 5: 5 : 5 = 1. Ответ: 51 — в частном две цифры, а не три.</p>
+  </div></section>
+
+  <section><div class="wrap">
+    <h2>Типичные ошибки</h2>
+    <div class="warn"><b>Потерян ноль в частном.</b> После сноса цифры число меньше делителя — ребёнок сразу сносит следующую цифру и забывает записать 0. 612 : 3 превращается в 24.</div>
+    <div class="warn"><b>Остаток больше делителя.</b> Значит, цифра частного подобрана слишком маленькой — её нужно увеличить на 1.</div>
+    <div class="warn"><b>Лишняя цифра в начале ответа.</b> Если первая цифра меньше делителя, в частное ничего не пишут — берут две первые цифры.</div>
+    <p>Все три ошибки тренажёр Stolbik ловит в момент ввода цифры: подсвечивает ошибку и объясняет, какое действие пересчитать. В примерах с нулём в частном он отдельно показывает, почему здесь нужно записать 0.</p>
+  </div></section>
+
+  <section><div class="wrap">
+    <h2>Примеры для тренировки</h2>
+    <p>Решите столбиком на бумаге или в тренажёре — там каждый шаг проверяется сразу.</p>
+    <ul class="practice"><li>84 : 4 =</li><li>96 : 3 =</li><li>375 : 5 =</li><li>728 : 8 =</li><li>846 : 6 =</li><li>912 : 4 =</li><li>618 : 6 =</li><li>824 : 4 =</li><li>1356 : 4 =</li><li>2745 : 5 =</li><li>4038 : 6 =</li><li>7182 : 9 =</li></ul>
+    <details><summary>Показать ответы</summary><p style="margin-top:8px">84 : 4 = 21, 96 : 3 = 32, 375 : 5 = 75, 728 : 8 = 91, 846 : 6 = 141, 912 : 4 = 228, 618 : 6 = 103, 824 : 4 = 206, 1356 : 4 = 339, 2745 : 5 = 549, 4038 : 6 = 673, 7182 : 9 = 798</p></details>
+  </div></section>
+
+  <section class="cta"><div class="wrap">
+    <h2>Тренажёр деления столбиком на однозначное число</h2>
+    <p>Ребёнок сам вводит каждую цифру, как в тетради. Тренажёр не выдаёт готовый ответ, а подсказывает действие: «Введи цифру частного: 13 ÷ 4», «Умножь 3 × 4», «Вычти 13 − 12 и снеси следующую цифру». Ошибка видна сразу — на том шаге, где она сделана. Примеры от двузначных до шестизначных чисел, с нулём в частном и без.</p>
+    <div class="btns">
+      <a href="javascript:void(0)" class="btn btn-demo" onclick="startDemo()">🎯 Попробовать бесплатно</a>
+      <a href="/#pricing" class="btn btn-buy">Полный доступ — от 100 ₽ в год</a>
+    </div>
+    <p class="note">Работает в браузере на телефоне, планшете и компьютере. Один доступ — для всех детей в семье.</p>
+  </div></section>
+
+  <section><div class="wrap">
+    <h2>Частые вопросы</h2>
+    <div class="faq"><h3>Как объяснить ребёнку деление столбиком на однозначное число?</h3><p>Разбейте деление на повторяющийся цикл из четырёх действий: найти неполное делимое, подобрать цифру частного, умножить её на делитель и вычесть, снести следующую цифру. Повторять цикл, пока не закончатся цифры делимого. Удобнее всего отрабатывать это на тренажёре, который подсказывает, какое действие сейчас нужно сделать.</p></div><div class="faq"><h3>В каком классе проходят деление столбиком на однозначное число?</h3><p>Деление многозначного числа на однозначное в столбик проходят в 3 классе, в 4 классе его закрепляют и переходят к делению на двузначное и трёхзначное число.</p></div><div class="faq"><h3>Что делать, если цифра делимого меньше делителя?</h3><p>Если первая цифра делимого меньше делителя, берут две первые цифры — это первое неполное делимое. Если же меньше делителя оказалось число после сноса цифры в середине деления, в частное записывают 0 и сносят следующую цифру.</p></div><div class="faq"><h3>Почему в ответе пропадает ноль?</h3><p>Это самая частая ошибка: после сноса цифры число оказывается меньше делителя, ребёнок сносит следующую цифру и забывает записать 0 в частное. Например, 612 : 3 получается 24 вместо 204. Проверка умножением сразу показывает ошибку: 24 × 3 = 72, а не 612.</p></div><div class="faq"><h3>Можно ли потренироваться бесплатно?</h3><p>Да. В тренажёре Stolbik есть бесплатный демо-режим без регистрации: в модуле «Деление, старт» можно решить 5 примеров на деление на однозначное число с подсказками на каждом шаге.</p></div>
+  </div></section>
+
+  <footer><div class="wrap">
+    <p><a href="/">На главную страницу тренажёра</a></p>
+    <p style="margin-top:8px">Математический тренажёр © 2025 · stolbik.online · Шарипов Тахир Жураевич, самозанятый · <a href="https://t.me/SharipovT">Telegram</a></p>
+  </div></footer>
+
+  <script>
+    window.startDemo = function() {
+      localStorage.setItem('isDemoMode', 'true');
+      var gone = false;
+      function go() { if (!gone) { gone = true; window.location.href = 'app.html'; } }
+      try {
+        if (typeof ym !== 'undefined') ym(107219867, 'reachGoal', 'demo_start', {}, go);
+      } catch (e) {}
+      setTimeout(go, 400);
+    }
+  </script>
+</body>
+</html>
